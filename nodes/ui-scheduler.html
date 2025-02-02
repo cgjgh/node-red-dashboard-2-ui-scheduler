@@ -1143,9 +1143,17 @@ copies or substantial portions of the Software.
                     this.customPayloads = []
                 }
 
+                function isEmpty (value) {
+                    if (value === null || value === undefined) return true
+                    if (typeof value === 'string' && value.trim() === '') return true
+                    if (typeof value === 'number' && isNaN(value)) return true
+                    // Add more checks if needed for other data types
+                    return false
+                }
+
                 // Validate uniqueness and non-emptiness of 'value' properties
-                const uniqueValues = new Set(this.customPayloads.map(o => o.value).filter(val => val.trim() !== ''))
-                if (this.customPayloads.length === uniqueValues.size && this.customPayloads.every(o => o.value.trim() !== '')) {
+                const uniqueValues = new Set(this.customPayloads.map(o => o.value).filter(val => !isEmpty(val)))
+                if (this.customPayloads.length === uniqueValues.size && this.customPayloads.every(o => !isEmpty(o.value))) {
                     $('#valWarning').hide()
                 } else {
                     $('#valWarning').show()
