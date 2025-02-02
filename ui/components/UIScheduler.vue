@@ -673,7 +673,7 @@
                                 <v-btn v-if="!isTimespanSchedule" prepend-icon="mdi-close-circle-outline" :value="false" color="red">False</v-btn>
                                 <v-btn v-if="!isTimespanSchedule" prepend-icon="mdi-check-circle-outline" :value="true" color="green">True</v-btn>
                                 <v-btn v-if="isTimespanSchedule" prepend-icon="mdi-check-circle-outline" :value="'true_false'" color="green">True/False</v-btn>
-                                <v-btn prepend-icon="mdi-check-circle-outline" :value="'custom'" color="blue">Custom</v-btn>
+                                <v-btn prepend-icon="mdi-code-braces" :value="'custom'" color="blue">Custom</v-btn>
                             </v-btn-toggle>
                         </v-col>
                         <v-col v-if="payloadType === 'custom'" cols="12" class="d-flex justify-center mt-3">
