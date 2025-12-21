@@ -484,17 +484,15 @@
                     <v-row justify="center">
                         <v-col cols="12" class="pt-0">
                             <v-text-field
-                                v-if="!isEditing" id="nrdb2-ui-scheduler-schedule-name-input" v-model="name"
-                                :label="t('scheduleName')" :rules="[rules.required]" required :disabled="isEditing"
+                                id="nrdb2-ui-scheduler-schedule-name-input" v-model="name"
+                                :label="t('scheduleName')" :rules="[rules.required]" required
                             >
                                 <template #append-inner>
                                     <v-icon v-if="!isNameDuplicate()" color="green" icon="mdi-check-circle" />
                                     <v-icon v-else color="red" icon="mdi-close-circle" />
                                 </template>
                             </v-text-field>
-                            <h2 v-else class="text-center pb-4">
-                                {{ name }}
-                            </h2>
+
                         </v-col>
                     </v-row>
 
@@ -1912,8 +1910,7 @@ export default {
                 ? this.schedules.some(
                     schedule =>
                         schedule.name.toLowerCase() === this.name.toLowerCase().trim() &&
-                        schedule !== this.currentSchedule &&
-                        !this.isEditing
+                        schedule !== this.currentSchedule
                 )
                 : false
         },
