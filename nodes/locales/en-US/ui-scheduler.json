@@ -55,16 +55,17 @@
       "uiOptionCustomOutput": "Custom Output",
       "uiOptionNewTimePicker": "New timepicker (if available)",
       "selectAtLeastOneOption": "Please select at least one option.",
-
       "start": "Start",
       "end": "End",
+      "endEvent": "End Event",
+      "selectEvent": "Select Event",
+      "offsetMinutes": "Offset (Minutes)",
       "done": "Done",
       "future": "in {time}",
       "past": "{time} ago",
       "never": "Never",
       "lessThanASecond": "Less than a second"
     },
-
     "days": {
       "sunday": "Sunday",
       "monday": "Monday",
@@ -74,7 +75,6 @@
       "friday": "Friday",
       "saturday": "Saturday"
     },
-
     "months": {
       "january": "January",
       "february": "February",
@@ -89,7 +89,6 @@
       "november": "November",
       "december": "December"
     },
-
     "solarEvents": {
       "nightEnd": "Night End",
       "nauticalDawn": "Nautical Dawn",
@@ -106,7 +105,6 @@
       "nightStart": "Night Start",
       "nadir": "Nadir"
     },
-
     "error": {
       "scheduleNameRequired": "Schedule Name is required.",
       "scheduleNameUnique": "Schedule Name must be unique.",
@@ -140,7 +138,6 @@
       "invalidPayloadTypeForNoTimespan": "Invalid payload type for a schedule without a timespan.",
       "invalidPayloadTypeForTimespan": "Invalid payload type for a schedule with a timespan."
     },
-
     "ui": {}
   }
 }

@@ -55,9 +55,11 @@
       "uiOptionCustomOutput": "Salida personalizada",
       "uiOptionNewTimePicker": "Nuevo selector de tiempo (si está disponible)",
       "selectAtLeastOneOption": "Por favor seleccione al menos una opción.",
-
       "start": "Inicio",
       "end": "Fin",
+      "endEvent": "Evento final",
+      "selectEvent": "Seleccionar evento",
+      "offsetMinutes": "Desplazamiento (Minutos)",
       "done": "Hecho",
       "future": "en {time}",
       "past": "hace {time}",

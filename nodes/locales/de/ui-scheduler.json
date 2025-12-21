@@ -55,9 +55,11 @@
       "uiOptionCustomOutput": "Benutzerdefinierte Ausgabe",
       "uiOptionNewTimePicker": "Neuer Zeitwähler (falls verfügbar)",
       "selectAtLeastOneOption": "Bitte wählen Sie mindestens eine Option aus.",
-
       "start": "Start",
       "end": "Ende",
+      "endEvent": "Endereignis",
+      "selectEvent": "Ereignis auswählen",
+      "offsetMinutes": "Versatz (Minuten)",
       "done": "Fertig",
       "future": "in {time}",
       "past": "vor {time}",

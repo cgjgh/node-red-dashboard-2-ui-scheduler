@@ -55,9 +55,11 @@
       "uiOptionCustomOutput": "Sortie personnalisée",
       "uiOptionNewTimePicker": "Nouveau sélecteur de temps (si disponible)",
       "selectAtLeastOneOption": "Veuillez sélectionner au moins une option.",
-
       "start": "Début",
       "end": "Fin",
+      "endEvent": "Événement de fin",
+      "selectEvent": "Sélectionner un événement",
+      "offsetMinutes": "Décalage (Minutes)",
       "done": "Terminé",
       "future": "dans {time}",
       "past": "il y a {time}",

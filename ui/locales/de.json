@@ -4,7 +4,6 @@
   "buyCoffee": "Kauf mir einen Kaffee",
   "updateAvailable": "Update verfügbar",
   "checkForUpdates": "Nach Updates suchen",
-
   "eventDetails": "Ereignisdetails",
   "topic": "Thema",
   "event": "Ereignis",
@@ -16,15 +15,12 @@
   "noSchedules": "Keine Zeitpläne",
   "required": "Erforderlich.",
   "schedule": "Zeitplan",
-
   "solar": "Solar",
   "solarEvent": "Solarereignis",
   "offset": "Versatz",
-
   "cron": "Cron",
   "cronExpression": "Cron-Ausdruck",
   "cronInfo": "Cron-Info",
-
   "error": "Fehler",
   "editSchedule": "Zeitplan bearbeiten",
   "newSchedule": "Neuer Zeitplan",
@@ -36,7 +32,7 @@
   "close": "Schließen",
   "import": "Importieren",
   "importSchedule": "Zeitplan importieren",
-  "copy" : "Kopieren",
+  "copy": "Kopieren",
   "copiedToClipboard": "In die Zwischenablage kopiert.",
   "exportTimeout": "Fehler: Export-Timeout. Bitte versuchen Sie es erneut.",
   "exportSchedule": "Zeitplan exportieren",
@@ -44,7 +40,6 @@
   "exportedSchedule": "Exportierter Zeitplan",
   "pasteJSONSchedule": "JSON-Zeitplan einfügen",
   "deleteScheduleConfirmation": "Sind Sie sicher, dass Sie diesen Zeitplan löschen möchten?",
-
   "period": "Periode",
   "output": "Ausgabe",
   "true": "Wahr",
@@ -68,14 +63,12 @@
   "day": "Tag",
   "week": "Woche",
   "year": "Jahr",
-
   "minutes": "Minuten",
   "hourly": "Stündlich",
   "daily": "Täglich",
   "weekly": "Wöchentlich",
   "monthly": "Monatlich",
   "yearly": "Jährlich",
-
   "lastDay": "Letzte",
   "selectDays": "Tage auswählen",
   "selectMonth": "Monat auswählen",
@@ -86,6 +79,7 @@
   "description": "Beschreibung",
   "start": "Start",
   "end": "Ende",
+  "endEvent": "Endereignis",
   "next": "Nächster",
   "nextInfo": "Nächste Info",
   "nextTime": "Nächste Zeit",
@@ -99,7 +93,6 @@
   "customOutputStart": "Benutzerdefinierte Ausgabe: Startzeit",
   "customOutputEnd": "Benutzerdefinierte Ausgabe: Endzeit",
   "customOutputSolarEvent": "Benutzerdefinierte Ausgabe: Solarereignis",
-
   "january": "Januar",
   "february": "Februar",
   "march": "März",
@@ -112,7 +105,6 @@
   "october": "Oktober",
   "november": "November",
   "december": "Dezember",
-
   "sunday": "Sonntag",
   "monday": "Montag",
   "tuesday": "Dienstag",
@@ -120,7 +112,6 @@
   "thursday": "Donnerstag",
   "friday": "Freitag",
   "saturday": "Samstag",
-
   "nightEnd": "Nachtende",
   "nauticalDawn": "Nautische Morgendämmerung",
   "civilDawn": "Bürgerliche Morgendämmerung",
@@ -135,11 +126,9 @@
   "nauticalDusk": "Nautische Abenddämmerung",
   "nightStart": "Nachtbeginn",
   "nadir": "Nadir",
-
   "noUpdateAvailable": "Kein Update verfügbar",
   "currentVersion": "Aktuelle Version",
   "latestVersion": "Neueste Version",
-
   "scheduleNameRequired": "Der Name des Zeitplans ist erforderlich.",
   "scheduleNameUnique": "Der Name des Zeitplans muss eindeutig sein.",
   "topicRequired": "Das Thema ist erforderlich.",

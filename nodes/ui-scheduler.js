@@ -1503,6 +1503,8 @@ function exportSchedule (schedule) {
         solarEvent,
         offset,
         solarDays,
+        solarEventEnd,
+        offsetEnd,
         solarEventStart,
         solarEventTimespanTime,
         startCronExpression,
@@ -1535,6 +1537,8 @@ function exportSchedule (schedule) {
             solarEvent,
             offset,
             solarDays,
+            solarEventEnd,
+            offsetEnd,
             solarEventStart,
             solarEventTimespanTime,
             startCronExpression,
@@ -1683,6 +1687,28 @@ function updateScheduleNextStatus (node, schedule, getNextDates = true, run = fa
             calculatedDurationPretty = enhancedMs(calculatedDuration)
             schedule.calculatedDuration = calculatedDuration
             schedule.calculatedDurationPretty = calculatedDurationPretty
+
+            // Calculate active state
+            const lastStart = primaryTaskStatus.lastDate ? new Date(primaryTaskStatus.lastDate) : null
+            const lastEnd = endTaskStatus.lastDate ? new Date(endTaskStatus.lastDate) : null
+
+            if (lastStart) {
+                if (!lastEnd) {
+                    schedule.active = true
+                    schedule.currentStartTime = primaryTaskStatus.lastDate
+                } else {
+                    if (lastStart > lastEnd) {
+                        schedule.active = true
+                        schedule.currentStartTime = primaryTaskStatus.lastDate
+                    } else {
+                        schedule.active = false
+                        schedule.currentStartTime = null
+                    }
+                }
+            } else {
+                schedule.active = false
+                schedule.currentStartTime = null
+            }
         }
 
         if (primaryTaskStatus) {
@@ -2771,7 +2797,7 @@ module.exports = function (RED) {
         }
 
         /**
-             * Determines if a schedule is enabled for a given node and schedule ID.
+             * Determines if a given schedule is enabled for a given node and schedule ID.
              *
              * @param {Object} node - The node object containing schedules.
              * @param {string} id - The ID of the schedule to check.
@@ -3352,6 +3378,31 @@ module.exports = function (RED) {
 
                                 updateTask(node, endCmd, null)
                             }
+                        } else if (schedule.timespan === 'solar') {
+                            // If timespan is solar, create a new task for the end of the schedule
+                            const { payload: endPayload, payloadType: endPayloadType } = getPayloadAndType(schedule, 'endPayloadValue', false)
+
+                            // create new end task
+                            const endCmd = {
+                                command: 'add',
+                                id: schedule.endTaskId || RED.util.generateId(),
+                                scheduleId: schedule.id,
+                                topic: task.node_topic,
+                                expressionType: 'solar',
+                                solarType: 'selected',
+                                solarEvents: schedule.solarEventEnd,
+                                solarDays: null,
+                                date: nextStartDate,
+                                offset: schedule.offsetEnd,
+                                locationType: 'fixed',
+                                payload: endPayload,
+                                payloadType: endPayloadType,
+                                dontStartTheTask: !schedule.enabled,
+                                endSchedule: true,
+                                limit: 1
+                            }
+
+                            updateTask(node, endCmd, null)
                         }
 
                         schedule.active = false
@@ -3537,6 +3588,31 @@ module.exports = function (RED) {
                                     schedule.active = false
                                     schedule.currentStartTime = null
                                 }
+                            } else if (schedule.timespan === 'solar') {
+                                // If timespan is solar, create a new task for the end of the schedule
+                                const { payload: endPayload, payloadType: endPayloadType } = getPayloadAndType(schedule, 'endPayloadValue', false)
+
+                                // create new end task
+                                const endCmd = {
+                                    command: 'add',
+                                    id: schedule.endTaskId || RED.util.generateId(),
+                                    scheduleId: schedule.id,
+                                    topic: task.node_topic,
+                                    expressionType: 'solar',
+                                    solarType: 'selected',
+                                    solarEvents: schedule.solarEventEnd,
+                                    solarDays: null,
+                                    date: now,
+                                    offset: schedule.offsetEnd,
+                                    locationType: 'fixed',
+                                    payload: endPayload,
+                                    payloadType: endPayloadType,
+                                    dontStartTheTask: !schedule.enabled,
+                                    endSchedule: true,
+                                    limit: 1
+                                }
+
+                                updateTask(node, endCmd, null)
                             }
                         } else {
                             // handle end schedule starts
@@ -3555,7 +3631,7 @@ module.exports = function (RED) {
 
                             schedule = updateScheduleNextStatus(node, schedule)
 
-                            if (schedule.timespan === 'duration' || schedule.timespan === 'time') {
+                            if (schedule.timespan === 'duration' || schedule.timespan === 'time' || schedule.timespan === 'solar') {
                                 schedule.active = false
                                 schedule.currentStartTime = null
                             }
@@ -3700,8 +3776,13 @@ module.exports = function (RED) {
 
                             // Generate task command
                             const cmd = generateTaskCmd(schedule)
-                            if (cmd) {
-                                // Check if primary is true
+                            if (Array.isArray(cmd)) {
+                                cmd.forEach(c => {
+                                    if (c.primary) schedule.primaryTaskId = c.id
+                                    if (c.endSchedule) schedule.endTaskId = c.id
+                                    cmds.push(c)
+                                })
+                            } else if (cmd) {
                                 if (cmd.primary) {
                                     // Set schedule.primaryTaskId to id
                                     schedule.primaryTaskId = cmd.id
@@ -3779,7 +3860,13 @@ module.exports = function (RED) {
 
                                     // Generate task command
                                     const cmd = generateTaskCmd(schedule)
-                                    if (cmd) {
+                                    if (Array.isArray(cmd)) {
+                                        cmd.forEach(c => {
+                                            if (c.primary) schedule.primaryTaskId = c.id
+                                            if (c.endSchedule) schedule.endTaskId = c.id
+                                            cmds.push(c)
+                                        })
+                                    } else if (cmd) {
                                         // Check if primary is true
                                         if (cmd.primary) {
                                             // Set schedule.primaryTaskId to id
@@ -4125,7 +4212,6 @@ module.exports = function (RED) {
                     removeEndTask(node, schedule.id)
                 }
                 if (schedule.timespan === false || schedule.timespan === 'duration' || schedule.solarEventStart === true) {
-                    // Create a solar command
                     const solarCmd = createCommand(null, 'solar', {
                         solarType: schedule.solarType || 'selected',
                         solarEvents: schedule.solarEvent || schedule.solarEvents,
@@ -4135,6 +4221,42 @@ module.exports = function (RED) {
                     })
                     schedule.description = generateSolarDescription(node, solarCmd).description
                     cmd = solarCmd
+                } else if (schedule.timespan === 'solar') {
+                    // Start Command
+                    const startCmd = createCommand(null, 'solar', {
+                        solarType: schedule.solarType || 'selected',
+                        solarEvents: schedule.solarEvent || schedule.solarEvents,
+                        solarDays: schedule.solarDays || null,
+                        offset: schedule.offset,
+                        locationType: 'fixed'
+                    })
+
+                    // End Command
+                    const { payload: endPayload, payloadType: endPayloadType } =
+                        getPayloadAndType(schedule, 'endPayloadValue', false)
+
+                    const endCmd = createCommand(null, 'solar', {
+                        id: schedule.endTaskId || RED.util.generateId(),
+                        solarType: schedule.solarType || 'selected',
+                        solarEvents: schedule.solarEventEnd,
+                        solarDays: schedule.solarDays || null,
+                        offset: schedule.offsetEnd,
+                        locationType: 'fixed',
+                        payload: endPayload,
+                        payloadType: endPayloadType,
+                        primary: false,
+                        endSchedule: true,
+                        // Override defaults applied by createCommand that assume primary
+                        command: 'add'
+                    })
+                    // Ensure primary is false (createCommand sets it unique if we don't override)
+                    // Actually createCommand sets primary: true. We need to override it.
+                    endCmd.primary = false
+
+                    schedule.description = generateSolarDescription(node, startCmd).description + ' - ' + generateSolarDescription(node, endCmd).description
+
+                    // Return both
+                    return [startCmd, endCmd]
                 } else if (
                     schedule.timespan === 'time' &&
                     schedule.solarEventTimespanTime &&
@@ -4300,7 +4422,7 @@ module.exports = function (RED) {
                 }
 
                 // When timespan requires two payloads, validate the end payload
-                if (['duration', 'time'].includes(schedule.timespan)) {
+                if (['duration', 'time', 'solar'].includes(schedule.timespan)) {
                     const endPayload = parseCustomPayload(node, schedule.endPayloadValue)
                     if (endPayload === null) {
                         return {
@@ -4371,12 +4493,12 @@ module.exports = function (RED) {
                         if (!months.includes(schedule.month)) {
                             return { valid: false, message: RED._('ui-scheduler.error.invalidMonth') }
                         }
-                        monthName = schedule.month
+                        monthName = months.indexOf(schedule.month) + 1
                     } else if (typeof schedule.month === 'number') {
                         if (schedule.month < 1 || schedule.month > 12) {
                             return { valid: false, message: RED._('ui-scheduler.error.invalidMonth') }
                         }
-                        monthName = months[schedule.month - 1]
+                        monthName = schedule.month
                     } else {
                         return { valid: false, message: RED._('ui-scheduler.error.invalidMonth') }
                     }
@@ -4425,11 +4547,18 @@ module.exports = function (RED) {
                     if (!schedule.solarEventTimespanTime || !isValidTimeFormat(schedule.solarEventTimespanTime)) {
                         return { valid: false, message: RED._('ui-scheduler.error.solarTimeRequired') }
                     }
+                } else if (schedule.timespan === 'solar') {
+                    if (!schedule.solarEventEnd || !PERMITTED_SOLAR_EVENTS.includes(schedule.solarEventEnd)) {
+                        return { valid: false, message: RED._('ui-scheduler.error.solarEventEndRequired') }
+                    }
+                    if (typeof schedule.offsetEnd !== 'number') {
+                        return { valid: false, message: RED._('ui-scheduler.error.solarOffsetEndRequired') }
+                    }
                 } else if (schedule.timespan !== false) {
-                    // In solar, timespan must be 'time', 'duration', or false.
+                    // In solar, timespan must be 'time', 'duration', 'solar', or false.
                     return {
                         valid: false,
-                        message: RED._('ui-scheduler.error.invalidTimespan', { allowed: '"time", "duration", or false for solar' })
+                        message: RED._('ui-scheduler.error.invalidTimespan', { allowed: '"time", "duration", "solar", or false for solar' })
                     }
                 }
                 // Validate solarDays if provided (optional)
@@ -4464,7 +4593,7 @@ module.exports = function (RED) {
                         })
                     }
                 }
-            } else if (['duration', 'time'].includes(schedule.timespan)) {
+            } else if (['duration', 'time', 'solar'].includes(schedule.timespan)) {
                 if (!['true_false', 'custom'].includes(schedule.payloadType)) {
                     return {
                         valid: false,
@@ -4537,6 +4666,10 @@ module.exports = function (RED) {
                     newSchedule.timespan = schedule.timespan
                     newSchedule.solarEventStart = schedule.solarEventStart
                     newSchedule.solarEventTimespanTime = schedule.solarEventTimespanTime
+                } else if (schedule.timespan === 'solar') {
+                    newSchedule.timespan = schedule.timespan
+                    newSchedule.solarEventEnd = schedule.solarEventEnd
+                    newSchedule.offsetEnd = schedule.offsetEnd
                 } else {
                     newSchedule.timespan = false
                 }
@@ -4664,9 +4797,17 @@ module.exports = function (RED) {
                     deleteSchedule(node, existingSchedule.id)
                 }
 
-                const cmd = generateTaskCmd(schedule)
-                if (cmd?.primary) schedule.primaryTaskId = cmd.id
-                if (cmd) commands.push(cmd)
+                const cmds = generateTaskCmd(schedule)
+                if (Array.isArray(cmds)) {
+                    cmds.forEach(cmd => {
+                        if (cmd.primary) schedule.primaryTaskId = cmd.id
+                        if (cmd.endSchedule) schedule.endTaskId = cmd.id
+                        commands.push(cmd)
+                    })
+                } else if (cmds) {
+                    if (cmds.primary) schedule.primaryTaskId = cmds.id
+                    commands.push(cmds)
+                }
 
                 // ensure were working with up to date schedule array
                 schedules = node.schedules

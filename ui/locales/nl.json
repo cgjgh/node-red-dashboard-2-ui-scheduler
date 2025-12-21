@@ -4,7 +4,6 @@
   "buyCoffee": "Koop me een koffie",
   "updateAvailable": "Update beschikbaar",
   "checkForUpdates": "Controleren op updates",
-
   "eventDetails": "Evenementdetails",
   "topic": "Onderwerp",
   "event": "Evenement",
@@ -16,15 +15,12 @@
   "noSchedules": "Geen schema's",
   "required": "Vereist.",
   "schedule": "Schema",
-
   "solar": "Solar",
   "solarEvent": "Zonnevenement",
   "offset": "Uitschuiving",
-
   "cron": "Cron",
   "cronExpression": "Cron-expressie",
   "cronInfo": "Cron-info",
-
   "error": "Fout",
   "editSchedule": "Bewerk schema",
   "newSchedule": "Nieuw schema",
@@ -36,7 +32,7 @@
   "close": "Sluiten",
   "import": "Importeren",
   "importSchedule": "Schema importeren",
-  "copy" : "Kopiëren",
+  "copy": "Kopiëren",
   "copiedToClipboard": "Gekopieerd naar het klembord.",
   "exportTimeout": "Fout: Export time-out. Probeer het opnieuw.",
   "exportSchedule": "Schema exporteren",
@@ -44,7 +40,6 @@
   "exportedSchedule": "Geëxporteerd schema",
   "pasteJSONSchedule": "Plak JSON-schema",
   "deleteScheduleConfirmation": "Weet u zeker dat u dit schema wilt verwijderen?",
-
   "period": "Periode",
   "output": "Uitvoer",
   "true": "Waar",
@@ -68,14 +63,12 @@
   "day": "Dag",
   "week": "Week",
   "year": "Jaar",
-
   "minutes": "Minuten",
   "hourly": "Elk uur",
   "daily": "Dagelijks",
   "weekly": "Wekelijks",
   "monthly": "Maandelijks",
   "yearly": "Jaarlijks",
-
   "lastDay": "Laatste",
   "selectDays": "Selecteer dagen",
   "selectMonth": "Selecteer maand",
@@ -86,6 +79,7 @@
   "description": "Beschrijving",
   "start": "Start",
   "end": "Einde",
+  "endEvent": "Eind evenement",
   "next": "Volgende",
   "nextInfo": "Volgende info",
   "nextTime": "Volgende tijd",
@@ -99,7 +93,6 @@
   "customOutputStart": "Aangepaste uitvoer: Starttijd",
   "customOutputEnd": "Aangepaste uitvoer: Eindtijd",
   "customOutputSolarEvent": "Aangepaste uitvoer: Zonnevenement",
-
   "january": "Januari",
   "february": "Februari",
   "march": "Maart",
@@ -112,7 +105,6 @@
   "october": "Oktober",
   "november": "November",
   "december": "December",
-
   "sunday": "Zondag",
   "monday": "Maandag",
   "tuesday": "Dinsdag",
@@ -120,7 +112,6 @@
   "thursday": "Donderdag",
   "friday": "Vrijdag",
   "saturday": "Zaterdag",
-
   "nightEnd": "Einde van de nacht",
   "nauticalDawn": "Nautische Morgendämmerung",
   "civilDawn": "Burgerlijke dageraad",
@@ -135,11 +126,9 @@
   "nauticalDusk": "Nautisch schemer",
   "nightStart": "Begin van de nacht",
   "nadir": "Nadir",
-
   "noUpdateAvailable": "Geen update beschikbaar",
   "currentVersion": "Huidige versie",
   "latestVersion": "Laatste versie",
-
   "scheduleNameRequired": "Schema naam is verplicht.",
   "scheduleNameUnique": "Schema naam moet uniek zijn.",
   "topicRequired": "Onderwerp is verplicht.",

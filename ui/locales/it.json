@@ -4,7 +4,6 @@
   "buyCoffee": "Offrimi un caffè",
   "updateAvailable": "Aggiornamento disponibile",
   "checkForUpdates": "Controlla aggiornamenti",
-
   "eventDetails": "Dettagli dell'evento",
   "topic": "Argomento",
   "event": "Evento",
@@ -16,15 +15,12 @@
   "noSchedules": "Nessun programma",
   "required": "Obbligatorio.",
   "schedule": "Programma",
-
   "solar": "Solare",
   "solarEvent": "Evento solare",
   "offset": "Offset",
-
   "cron": "Cron",
   "cronExpression": "Espressione cron",
   "cronInfo": "Informazioni cron",
-
   "error": "Errore",
   "editSchedule": "Modifica programma",
   "newSchedule": "Nuovo programma",
@@ -36,7 +32,7 @@
   "close": "Chiudi",
   "import": "Importa",
   "importSchedule": "Importa programma",
-  "copy" : "Copia",
+  "copy": "Copia",
   "copiedToClipboard": "Copiato negli appunti.",
   "exportTimeout": "Errore: Timeout esportazione. Riprova.",
   "exportSchedule": "Esporta programma",
@@ -44,7 +40,6 @@
   "exportedSchedule": "Programma esportato",
   "pasteJSONSchedule": "Incolla programma JSON",
   "deleteScheduleConfirmation": "Sei sicuro di voler eliminare questo programma?",
-
   "period": "Periodo",
   "output": "Output",
   "true": "Vero",
@@ -68,14 +63,12 @@
   "day": "Giorno",
   "week": "Settimana",
   "year": "Anno",
-
   "minutes": "Minuti",
   "hourly": "Ogni ora",
   "daily": "Giornaliero",
   "weekly": "Settimanale",
   "monthly": "Mensile",
   "yearly": "Annuale",
-
   "lastDay": "Ultimo",
   "selectDays": "Seleziona i giorni",
   "selectMonth": "Seleziona il mese",
@@ -86,6 +79,7 @@
   "description": "Descrizione",
   "start": "Inizio",
   "end": "Fine",
+  "endEvent": "Evento finale",
   "next": "Successivo",
   "nextInfo": "Info successiva",
   "nextTime": "Ora successiva",
@@ -99,7 +93,6 @@
   "customOutputStart": "Output personalizzato: Ora d'inizio",
   "customOutputEnd": "Output personalizzato: Ora di fine",
   "customOutputSolarEvent": "Output personalizzato: Evento solare",
-
   "january": "Gennaio",
   "february": "Febbraio",
   "march": "Marzo",
@@ -112,7 +105,6 @@
   "october": "Ottobre",
   "november": "Novembre",
   "december": "Dicembre",
-
   "sunday": "Domenica",
   "monday": "Lunedì",
   "tuesday": "Martedì",
@@ -120,7 +112,6 @@
   "thursday": "Giovedì",
   "friday": "Venerdì",
   "saturday": "Sabato",
-
   "nightEnd": "Fine della notte",
   "nauticalDawn": "Alba nautica",
   "civilDawn": "Alba civile",
@@ -135,11 +126,9 @@
   "nauticalDusk": "Crepuscolo nautico",
   "nightStart": "Inizio della notte",
   "nadir": "Nadir",
-
   "noUpdateAvailable": "Nessun aggiornamento disponibile",
   "currentVersion": "Versione corrente",
   "latestVersion": "Ultima versione",
-
   "scheduleNameRequired": "Il nome del programma è obbligatorio.",
   "scheduleNameUnique": "Il nome del programma deve essere unico.",
   "topicRequired": "L'argomento è obbligatorio.",

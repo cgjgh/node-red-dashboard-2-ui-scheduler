@@ -55,9 +55,11 @@
       "uiOptionCustomOutput": "Aangepaste uitvoer",
       "uiOptionNewTimePicker": "Nieuwe tijdkiezer (indien beschikbaar)",
       "selectAtLeastOneOption": "Selecteer alstublieft ten minste één optie.",
-      
       "start": "Start",
       "end": "Einde",
+      "endEvent": "Eind evenement",
+      "selectEvent": "Selecteer evenement",
+      "offsetMinutes": "Verschuiving (Minuten)",
       "done": "Klaar",
       "future": "over {time}",
       "past": "{time} geleden",

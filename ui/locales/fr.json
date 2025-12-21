@@ -4,7 +4,6 @@
   "buyCoffee": "Achète-moi un café",
   "updateAvailable": "Mise à jour disponible",
   "checkForUpdates": "Vérifier les mises à jour",
-
   "eventDetails": "Détails de l'événement",
   "topic": "Sujet",
   "event": "Événement",
@@ -16,15 +15,12 @@
   "noSchedules": "Aucun horaire",
   "required": "Requis.",
   "schedule": "Horaire",
-
   "solar": "Solaire",
   "solarEvent": "Événement solaire",
   "offset": "Décalage",
-
   "cron": "Cron",
   "cronExpression": "Expression cron",
   "cronInfo": "Infos cron",
-
   "error": "Erreur",
   "editSchedule": "Modifier l'horaire",
   "newSchedule": "Nouvel horaire",
@@ -36,15 +32,14 @@
   "close": "Fermer",
   "import": "Importer",
   "importSchedule": "Importer l'horaire",
-  "copy" : "Copier",
+  "copy": "Copier",
   "copiedToClipboard": "Copié dans le presse-papiers.",
-  "exportTimeout": "Erreur : Délai d'exportation dépassé. Veuillez réessayer.",    
+  "exportTimeout": "Erreur : Délai d'exportation dépassé. Veuillez réessayer.",
   "exportSchedule": "Exporter l'horaire",
   "loadingScheduleExport": "Exportation de l'horaire...",
   "exportedSchedule": "Horaire exporté",
   "pasteJSONSchedule": "Coller l'horaire JSON",
   "deleteScheduleConfirmation": "Êtes-vous sûr de vouloir supprimer cet horaire ?",
-
   "period": "Période",
   "output": "Sortie",
   "true": "Vrai",
@@ -68,14 +63,12 @@
   "day": "Jour",
   "week": "Semaine",
   "year": "Année",
-
   "minutes": "Minutes",
   "hourly": "Toutes les heures",
   "daily": "Quotidien",
   "weekly": "Hebdomadaire",
   "monthly": "Mensuel",
   "yearly": "Annuel",
-
   "lastDay": "Dernier",
   "selectDays": "Sélectionner les jours",
   "selectMonth": "Sélectionner le mois",
@@ -86,6 +79,7 @@
   "description": "Description",
   "start": "Début",
   "end": "Fin",
+  "endEvent": "Événement de fin",
   "next": "Suivant",
   "nextInfo": "Info suivante",
   "nextTime": "Heure suivante",
@@ -99,7 +93,6 @@
   "customOutputStart": "Sortie personnalisée : Heure de début",
   "customOutputEnd": "Sortie personnalisée : Heure de fin",
   "customOutputSolarEvent": "Sortie personnalisée : Événement solaire",
-
   "january": "Janvier",
   "february": "Février",
   "march": "Mars",
@@ -112,7 +105,6 @@
   "october": "Octobre",
   "november": "Novembre",
   "december": "Décembre",
-
   "sunday": "Dimanche",
   "monday": "Lundi",
   "tuesday": "Mardi",
@@ -120,7 +112,6 @@
   "thursday": "Jeudi",
   "friday": "Vendredi",
   "saturday": "Samedi",
-
   "nightEnd": "Fin de la nuit",
   "nauticalDawn": "Aube nautique",
   "civilDawn": "Aube civile",
@@ -135,11 +126,9 @@
   "nauticalDusk": "Crépuscule nautique",
   "nightStart": "Début de la nuit",
   "nadir": "Nadir",
-
   "noUpdateAvailable": "Aucune mise à jour disponible",
   "currentVersion": "Version actuelle",
   "latestVersion": "Dernière version",
-
   "scheduleNameRequired": "Le nom de l'horaire est requis.",
   "scheduleNameUnique": "Le nom de l'horaire doit être unique.",
   "topicRequired": "Le sujet est requis.",

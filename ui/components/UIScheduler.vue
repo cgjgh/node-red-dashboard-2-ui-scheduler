@@ -944,6 +944,12 @@
                                 >
                                     {{ t('time') }}
                                 </v-btn>
+                                <v-btn
+                                    v-if="(scheduleType === 'solar')" prepend-icon="mdi-weather-sunset"
+                                    :value="'solar'"
+                                >
+                                    {{ t('solar') }}
+                                </v-btn>
                             </v-btn-toggle>
                         </v-col>
                         <v-col v-if="timespan === 'time'" cols="12" class="d-flex justify-center">
@@ -953,7 +959,7 @@
                             </v-radio-group>
                         </v-col>
                         <v-col
-                            v-if="((period === 'minutes' || period === 'hourly') || scheduleType === 'solar' || scheduleType === 'cron')"
+                            v-if="((period === 'minutes' || period === 'hourly') || (scheduleType === 'solar' && timespan !== 'solar') || scheduleType === 'cron')"
                             cols="12" class="d-flex justify-center"
                         >
                             <v-select
@@ -996,6 +1002,29 @@
                                     </template>
                                 </v-text-field>
                             </v-col>
+                        </v-col>
+                        <v-col v-if="timespan === 'solar'" cols="12" class="d-flex justify-center mt-2">
+                            <v-label>{{ t('endEvent') }}</v-label>
+                        </v-col>
+                        <v-col v-if="timespan === 'solar'" cols="12" class="d-flex justify-center">
+                            <v-select
+                                v-model="solarEventEnd" :items="solarEvents" :label="t('selectEvent')" required
+                                :rules="[rules.required]"
+                            >
+                                <template #prepend-inner>
+                                    <v-icon>mdi-weather-sunset-down</v-icon>
+                                </template>
+                            </v-select>
+                        </v-col>
+                        <v-col v-if="timespan === 'solar'" cols="12" class="d-flex justify-center">
+                            <v-select
+                                v-model="offsetEnd" :items="offsetItems" :label="t('offsetMinutes')"
+                                :rules="[rules.requiredNumber]"
+                            >
+                                <template #prepend-inner>
+                                    <v-icon>mdi-plus-minus</v-icon>
+                                </template>
+                            </v-select>
                         </v-col>
                     </v-row>
 
@@ -1299,6 +1328,8 @@ export default {
             offset: null,
             solarDays: [],
             solarShowMore: [],
+            solarEventEnd: null,
+            offsetEnd: null,
             solarEventStart: true,
             solarEventTimespanTime: null,
             payloadType: true,
@@ -1512,7 +1543,7 @@ export default {
         isTimespanSchedule () {
             return (this.scheduleType === 'time' && (this.period === 'daily' || this.period === 'weekly' || this.period === 'monthly' || this.period === 'yearly') && this.timespan === 'time') ||
                 (this.scheduleType === 'time' && (this.period === 'minutes' || this.period === 'hourly') && this.timespan === 'duration') ||
-                (this.scheduleType === 'solar' && (this.timespan === 'duration' || this.timespan === 'time')) ||
+                (this.scheduleType === 'solar' && (this.timespan === 'duration' || this.timespan === 'time' || this.timespan === 'solar')) ||
                 (this.scheduleType === 'cron' && this.timespan === 'duration')
         },
         customPayloads () {
@@ -2052,6 +2083,10 @@ export default {
                     newSchedule.timespan = this.timespan
                     newSchedule.solarEventStart = this.solarEventStart
                     newSchedule.solarEventTimespanTime = this.solarEventTimespanTime
+                } else if (this.timespan === 'solar') {
+                    newSchedule.timespan = this.timespan
+                    newSchedule.solarEventEnd = this.solarEventEnd
+                    newSchedule.offsetEnd = this.offsetEnd
                 } else {
                     newSchedule.timespan = false
                 }
@@ -2183,6 +2218,14 @@ export default {
                             alert: true,
                             message: this.t('solarTimeRequired')
                         }
+                    }
+                }
+                if (this.timespan === 'solar') {
+                    if (!this.solarEventEnd) {
+                        return { alert: true, message: this.t('solarEventRequired') }
+                    }
+                    if (!this.offsetEnd && this.offsetEnd !== 0) {
+                        return { alert: true, message: this.t('solarOffsetRequired') }
                     }
                 }
             } else if (this.scheduleType === 'cron') {
@@ -2332,6 +2375,8 @@ export default {
             const length = this.solarDays?.length
             this.solarShowMore = length > 0 && length < 7 ? ['moreOptions'] : []
             this.offset = item.offset || this.offset
+            this.solarEventEnd = item.solarEventEnd || this.solarEventEnd
+            this.offsetEnd = item.offsetEnd || this.offsetEnd
             this.solarEventTimespanTime = item.solarEventTimespanTime || this.solarEventTimespanTime
             this.solarEventStart = item.solarEventStart !== undefined ? item.solarEventStart : this.solarEventStart
 
@@ -2398,6 +2443,8 @@ export default {
             this.hourlyInterval = 1
             this.solarEvent = 'sunrise'
             this.offset = 0
+            this.solarEventEnd = 'sunset'
+            this.offsetEnd = 0
             this.solarDays = [...this.daysOfWeek.map(day => day.value)]
             this.solarEventStart = true
             this.solarEventTimespanTime = '00:00'
