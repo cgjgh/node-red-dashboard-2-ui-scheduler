@@ -1,0 +1,535 @@
+<script type="text/javascript">
+    function _popoutSchedulerHelp(tag) {
+        const startTag = (name) => `<${name}>`
+        const endTag = (name) => `</${name}>`
+        const winHtml = `
+            ${startTag('html')}
+                ${startTag('head')}
+                    ${startTag('title')}ui-scheduler 帮助${endTag('title')}
+                    ${startTag('style')}
+                    .fade-in {
+                        transition: opacity 1.5s ease-in-out;
+                    }
+                    .hidden {
+                        opacity: 0;
+                        visibility: hidden;
+                    }
+                    ${endTag('style')}
+                ${endTag('head')}
+                ${startTag('body')}
+                    ${startTag('script')}
+                        const styles = ${JSON.stringify([].map.call(document.querySelectorAll('[rel="stylesheet"]'), e => e.href))}
+                        const head = document.head || document.getElementsByTagName('head')[0]
+                        styles.forEach(href => {
+                            const el = document.createElement('link');
+                            el.rel="stylesheet"
+                            el.href = href
+                            head.appendChild(el);
+                        })
+                    ${endTag('script')}
+                    <div class="red-ui-editor help-content hidden" style="height: 100%">
+                        <div class="red-ui-sidebar-info">
+                            <div class="red-ui-sidebar-help-stack red-ui-panels" style="height: 100%;">
+                                <div class="red-ui-panel" style="overflow-y: auto;height: 100%;">
+                                    <div class="red-ui-help" style="padding: 6px;height: 100%;">
+                                        <h1 class="red-ui-help-title">ui-scheduler</h1>
+                                        <div class="red-ui-help">
+                                            <span class="red-ui-text-bidi-aware">
+                                                ${RED.nodes.getNodeHelp('ui-scheduler')}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    ${startTag('script')}
+                        if (navigator.clipboard) {
+                            document.querySelector('.ui-scheduler-link-button').classList.add('hidden')
+                            const content = document.querySelector('.help-content');
+                            content.classList.add('hidden')
+                            content.classList.remove('hidden')
+                            content.classList.add('fade-in')
+                            const copyButtonLabel = "复制"
+                            const blocks = document.querySelectorAll("pre.ui-scheduler-code")
+                            blocks.forEach((block) => {
+                                const button = document.createElement("button")
+                                button.innerText = copyButtonLabel
+                                button.classList.add('ui-scheduler-copy-button')
+                                button.addEventListener("click", copyCode)
+                                block.appendChild(button)
+                            })
+                        }
+                        async function copyCode(event) {
+                            const button = event.srcElement
+                            const pre = button.parentElement
+                            const code = pre.querySelector("code")
+                            const text = code.innerText
+                            await navigator.clipboard.writeText(text)
+                        }
+                    ${endTag('script')}
+                ${endTag('body')}
+            ${endTag('html')}`
+
+        const BOM = new Uint8Array([0xEF, 0xBB, 0xBF])
+        const winUrl = URL.createObjectURL(
+            new Blob([BOM, winHtml], { encoding: 'UTF-8', type: 'text/html;charset=UTF-8' })
+        )
+        const win = window.open(
+            winUrl + (tag ? '#' + tag : ''),
+            'win',
+            'width=800,height=600'
+        )
+    }
+</script>
+
+<script type="text/markdown" data-help-name="ui-scheduler">
+
+    # 🕙 UI Scheduler 帮助文档
+
+本文档提供了配置 UI Scheduler 节点设置、在 Dashboard UI 中的使用以及附加信息的综合指南。UI Scheduler 允许用户基于时间、太阳能事件或 Cron 表达式自动执行任务。
+
+## 👆 在 Dashboard 2.0 中使用 UI Scheduler
+
+#### 🖥️ 主界面
+
+- **🛠️ 工具栏**: 
+  - **🔍 主题选择器**: 按主题筛选调度。
+  - **➕ 添加调度按钮**: 打开对话框以创建新调度。
+  - **☰ 菜单**: 访问其他选项，如检查更新或报告问题。
+
+- **📋 调度表**: 显示所有调度的详细信息，如名称、描述和状态。你可以展开行以查看更多详细信息。
+
+#### 🗓️ 创建调度
+
+1. **🖱️ 打开调度对话框**: 点击工具栏中的 ➕ 按钮。
+2. **✏️ 输入调度详细信息**:
+   - **🏷️ 名称**: 输入调度的唯一名称。
+   - **📂 主题**: 从下拉列表中选择一个主题。主题在 **节点设置** 中定义
+   - **⏲️ 类型**: 选择 Time (时间), Solar (太阳能) 或 Cron 调度。
+   - **🔄 周期**: 对于基于时间的调度，选择重复周期。
+   - **🕒 时间/日期**: 设置开始时间，如果适用，设置结束时间或持续时间。
+   - **📦 载荷 (Payload)**: 选择载荷类型并根据需要定义自定义载荷。
+3. **💾 保存调度**: 点击 "保存" 添加调度。
+
+#### ✏️ 编辑调度
+
+- **🖊️ 编辑**: 点击表中的调度展开行以查看更多详细信息。点击铅笔图标打开编辑对话框。进行更改并保存。
+- - **🗑️ 删除**: 点击删除图标以移除调度。
+
+#### 🔄 导入和导出调度
+
+- **📤 导出**: 点击导出图标将调度 JSON 复制到剪贴板。_仅在编辑调度时可用。_
+- **📥 导入**: 点击导入图标并粘贴 JSON 以导入调度。_仅在创建调度时可用。_
+
+#### ⚙️ 管理调度
+
+- **🔄 启用/禁用**: 使用切换开关启用或禁用调度。
+
+### 🚀 高级功能
+
+#### 🌞 太阳能事件
+
+- 基于带有偏移量的太阳能事件自定义调度。
+- 支持的事件包括日出、日落和各种暮光阶段。
+
+#### ⏰ Cron 表达式
+
+- 使用 cron 语法满足复杂的调度需求。
+- 支持标准 cron 字段和特殊字符。
+
+#### 📦 自定义载荷 (Payloads)
+
+- 使用自定义载荷进行调度输出。载荷在 **节点设置** 中定义
+- 支持 JSON 和其他数据格式。
+
+## 🛠️ 节点设置
+
+#### 🏷️ 名称
+- **字段**: `名称`
+- **描述**: 输入调度器的唯一名称。此名称将用于在系统中标识调度器。
+- **输入类型**: 文本 (string)
+
+#### 👥 分组
+- **字段**: `分组`
+- **描述**: 选择此调度器所属的分组。分组有助于在 UI 中组织小部件。
+- **输入类型**: 下拉列表 (string)
+
+#### 📏 尺寸
+- **字段**: `尺寸`
+- **描述**: 调整 UI 中调度器小部件的大小。可以手动设置或使用元素尺寸调整器。
+- **输入类型**: 按钮 (元素尺寸调整器)
+
+#### 🏷️ 标签
+- **字段**: `标签`
+- **描述**: 为调度器设置一个将在 UI 中显示的标签。
+- **输入类型**: 文本 (string)
+
+### 🌍 本地化设置
+
+#### 🌐 语言
+- **字段**: `语言`
+- **描述**: 选择调度器界面的语言。
+  - 支持的语言包括英语、德语、法语、意大利语、荷兰语和西班牙语。
+  - 也可编辑 <code>~/.node-red/settings.js</code> 并添加/取消注释以下行: <code>lang: 'zh-CN'</code>。
+可用语言代码为: <code>en</code>, <code>de</code>, <code>fr</code>, <code>it</code>, <code>nl</code>, <code>es</code>, <code>pl</code>, <code>cs</code>, <code>zh-CN</code>
+这将设置 Node-Red 服务器上 UI Scheduler 节点使用的语言。
+- **输入类型**: 下拉列表 (string)
+
+#### ⏰ 时区
+- **字段**: `时区`
+- **描述**: 指定调度器的时区。这会影响时间的计算和显示方式。
+  - 留空表示使用系统时区。
+  - 或者，输入 UTC 或格式为 地区/区域 的时区 ([列表](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones))。
+- **输入类型**: 自动完成文本 (string)
+
+#### 🕒 24小时制
+- **字段**: `使用 24 小时制`
+- **描述**: 在 24 小时和 12 小时时间格式之间切换。
+- **输入类型**: 复选框 (boolean)
+
+### 📍 位置设置
+
+#### 🌐 位置
+- **字段**: `位置`
+- **描述**: 设置用于太阳能事件计算的默认地理位置。这可以是固定位置或环境变量。
+- **输入类型**: Typed Input (string)
+
+### 📤 输出设置
+
+#### 📬 命令响应消息输出
+- **字段**: `命令响应消息输出`
+- **描述**: 选择命令响应的输出方式。选项包括:
+  - 1 个输出: 所有消息发送到输出 1 (调度 + 命令响应)
+  - 2 个输出: 命令响应发送到输出 1，调度消息发送到输出 2
+  - 扇出 (Fan out): 命令消息和每个主题的消息分别输出
+- **输入类型**: 下拉列表 (string)
+
+#### 📝 输出属性
+- **字段**: `输出字段`
+- **描述**: 指定消息对象中存储输出的属性。
+  - 例如，如果 '输出属性' 设置为 **data.value**，则 `msg.data.value` 将包含 *payload* 的值
+  - `msg.topic` 将包含主题的名称。这简化了区分哪个调度已触发
+  - 其他属性也会添加到 msg 对象中。检查调试输出 (使用显示完整消息)
+
+- **输入类型**: Typed Input (string)
+
+### 📊 状态设置
+
+#### 📅 发送调度状态
+- **字段**: `发送调度状态`
+- **描述**: 配置发送调度状态的频率以及是否发送激活或非激活状态。
+  - 这是按主题分组的，因此如果两个调度对于同一主题都是 `激活` (在开始和结束时间范围内)，则只会发送一条 payload 为 `true` 的消息。
+  - 同样，如果一个主题的一个调度是 `非激活`，而另一个是 `激活`，则只会发送一条 payload 为 `true` 的消息。
+  - 如果两个调度都 `非激活`，则只会发送一条 payload 为 `false` 的消息。
+- **输入类型**: 数字 (间隔), 复选框 (激活/非激活状态) (number, boolean)
+
+### 💾 存储设置
+
+#### 🗄️ 存储名称
+- **字段**: `存储名称`
+- **描述**: 选择用于持久化调度的存储方法。选项包括:
+  - 无: 不持久化调度。重新部署节点时调度将丢失
+  - 本地文件系统: 将调度持久化到本地文件系统。调度保存在 node-red 文件夹下名为 `schedulerdata` 的目录中
+  - 节点上下文存储: 将调度持久化到节点上下文。这些存储将自动从您的 node-red 设置文件加载。有关更多信息，请参阅 [Node-RED 上下文](https://nodered.org/docs/user-guide/context) 文档。
+- **输入类型**: 下拉列表 (string)
+
+### 📨 主题和载荷
+
+#### 🗂️ 主题
+- **字段**: `主题`
+- **描述**: 定义调度器的主题。主题有助于分类和管理调度。
+  - 这些主题可用于调度的 `主题` 字段，并可在 Node-Red Dashboard 2.0 UI 中选择。
+  - 在扇出模式下，调度消息将发送到与主题对应的输出。
+- **输入类型**: 可编辑列表 (string)
+
+#### 📦 自定义载荷
+- **字段**: `自定义载荷`
+- **描述**: 定义调度触发时发送的自定义载荷。
+  - 载荷可以是各种类型，包括字符串、数字、布尔值和 JSON。
+  - 此处定义的载荷可以在 Dashboard UI 中选择。
+  - 修改此处的载荷值将自动更新使用该载荷的所有调度的载荷值
+- **输入类型**: 带有 Typed Input 的可编辑列表 (string, number, boolean, JSON)
+
+### ⚙️ 高级设置
+
+#### 🕰️ 使用新时间选择器
+- **字段**: `使用新时间选择器`
+- **描述**: 启用或禁用新的时间选择器界面。
+- **输入类型**: 复选框 (boolean)
+
+## 🔧 输入 (高级用法)
+
+#### 主题
+大多数命令可以在主题中提供，并在载荷中包含调度名称 (如适用)。支持的命令主题...
+
+- trigger
+- status
+- export
+- remove
+- pause
+- stop
+- start
+
+包括 `-all`, `-all-dynamic`, `-all-static`, `-topic`, `-active`,  `-active-dynamic`,  `-active-static`, `-inactive`, `-inactive-dynamic` 和 `-inactive-static` 命令主题 (例如 export-all, stop-all-dynamic, start-all-static, remove-inactive-dynamic)。有关详细信息，请参阅下面的 [命令](#ui-scheduler-commands-info)。
+
+#### 📦 载荷 (Payload)
+可以通过向节点注入载荷来动态添加、移除和控制调度。载荷对象 (或对象数组) 的格式取决于操作。有关详细信息，请参阅下文。您还可以在编辑窗口中从 Dashboard UI 导出调度并粘贴生成的 JSON。
+
+#### ➕ 添加一个 (或多个) 调度
+示例...
+```json
+payload: {
+  "command": "add",
+  "schedule": [
+    {
+      "name": "Schedule",
+      "topic": "Topic 1",
+      "enabled": true,
+      "scheduleType": "time",
+      "period": "daily",
+      "time": "00:00",
+      "endTime": null,
+      "days": [
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday"
+      ],
+      "payloadType": true,
+      "payloadValue": true
+    },
+    {
+      "name": "Schedule 2",
+      "topic": "Topic 1",
+      "enabled": true,
+      "scheduleType": "solar",
+      "timespan": "time",
+      "solarEvent": "sunrise",
+      "offset": 5,
+      "solarEventStart": false,
+      "solarEventTimespanTime": "21:00",
+      "payloadType": "true_false",
+      "payloadValue": true,
+      "endPayloadValue": false
+    },
+    {
+      "name": "Schedule 3",
+      "topic": "Topic 1",
+      "enabled": true,
+      "scheduleType": "time",
+      "period": "minutes",
+      "duration": 1,
+      "timespan": "duration",
+      "minutesInterval": 7,
+      "payloadType": "true_false",
+      "payloadValue": true,
+      "endPayloadValue": false
+    }
+  ]
+}
+```
+
+### 📊 获取调度状态或移除 / 停止 / 暂停 / 启动调度
+
+#### 主题方法
+```json
+msg.topic = "command"; // command name - *see details below*,
+msg.payload = "name"; //  name of the schedule
+```
+
+#### 载荷方法
+```json
+payload: {
+  "command": "*见下文详情*",
+  "name": "* 调度名称",
+}
+```
+
+#### 详情
+- command: (string|必填) 要执行的操作 - 可以是以下之一...
+  - "trigger"
+  - "status"
+  - "export"
+  - "remove"
+  - "stop"
+  - "pause"
+  - "start"
+- name: (string|可选) 要影响的调度的名称 (使用 -all, -active 或 -inactive 过滤器时不需要)
+
+#### 📝 备注
+- `trigger` 触发 `msg.payload` 中命名的调度
+- `status` 返回命名调度的配置和状态对象
+- `export` 返回命名调度的配置对象
+- `remove` 将停止并移除调度。此选项无输出。
+- `stop` 将停止由 `name` 指定的调度并重置其内部计数器。此选项无输出。
+- `pause` 将停止由 `name` 指定的调度，但不会重置其内部计数器。此选项无输出。
+- `start` 将 (重新) 启动所有调度。任何达到限制的调度都将从头开始。暂停的调度将恢复。此选项无输出。
+- 过滤器: 向任何这些命令添加 `-all` 将对所有调度进行操作。例如 `status-all` 将返回所有调度的状态
+- 过滤器: 向任何这些命令添加 `-all-dynamic` 将仅影响动态调度，例如 `remove-all-dynamic` 将移除所有动态调度
+- 过滤器: 向任何这些命令添加 `-all-static` 将仅影响静态调度，例如 `stop-all-static`
+- 过滤器: 向任何这些命令添加 `-topic` 将仅影响主题与载荷中指定的主题匹配的调度，例如 `stop-topic`
+- 过滤器: 向 status, export 和 remove 命令添加 `-active` 将对所有激活的调度进行操作。例如 `status-active`
+- 过滤器: 向 status, export 和 remove 命令添加 `-active-static` 将对所有激活的静态调度进行操作。例如 `status-active-static`
+- 过滤器: 向 status, export 和 remove 命令添加 `-active-dynamic` 将对所有激活的动态调度进行操作。例如 `status-active-dynamic`
+- 过滤器: 向 status, export 和 remove 命令添加 `-inactive` 将对所有非激活的调度进行操作。例如 `status-inactive`
+- 过滤器: 向 status, export 和 remove 命令添加 `-inactive-static` 将对所有非激活的静态调度进行操作。例如 `status-inactive-static`
+- 过滤器: 向 status, export 和 remove 命令添加 `-inactive-dynamic` 将对所有非激活的动态调度进行操作。例如 `status-inactive-dynamic`
+
+#### 📖 示例
+- 使用简单的主题命令手动触发名为 "schedule1" 的调度
+  ```json
+  msg: {
+    "topic": "trigger",
+    "payload": "schedule1"
+  }
+  ```
+- 使用带有载荷中主题的简单主题命令启动具有指定主题的所有调度
+  ```json
+  msg: {
+    "topic": "start-topic",
+    "payload": { "topic": "Topic 1" }
+  }
+  ```
+- 使用简单的主题命令导出所有动态添加的调度...
+  ```json
+  msg: {
+    "topic": "export-all-dynamic"
+  }
+  ```
+- 使用简单的主题命令删除名为 "schedule1" 的调度
+  ```json
+  msg: {
+    "topic": "remove",
+    "payload": "schedule1"
+  }
+  ```
+- 使用 cmd 载荷暂停所有调度...
+  ```json
+  payload: {
+    "command": "pause-all"
+  }
+  ```
+- 使用简单的主题命令删除所有已完成的动态调度
+  ```json
+  msg: {
+    "topic": "remove-inactive-dynamic"
+  }
+  ```
+
+### 🔍 Describe (描述)
+
+#### 示例: cmd 载荷描述 cron 表达式
+```json
+{
+  "command": "describe",
+  "expressionType": "cron",
+  "expression": "0 */5 * * * MON *",
+  "timeZone": "Europe/London"
+}
+```
+
+#### 示例: cmd 载荷获取此时所有太阳能事件时间 + 太阳能状态
+```json
+{
+  "command": "describe",
+  "expressionType": "solar",
+  "location": "54.9992500,-1.4170300",
+  "solarType": "all",
+  "timeZone": "Europe/London"
+}
+```
+
+#### 示例: cmd 载荷获取特定时间点的 4 个太阳能事件时间 + 太阳能
+```json
+{
+  "command": "describe",
+  "expressionType": "solar",
+  "time": "2020-03-22 18:40",
+  "location": "54.9992500,-1.4170300",
+  "solarType": "selected",
+  "solarEvents": "civilDawn,sunrise,sunset,civilDusk",
+  "timeZone": "Europe/London"
+}
+```
+
+#### 详情
+在载荷中返回一个包含给定表达式的可读信息的对象。
+
+- command: (string|必填) 要执行的操作
+- expression: (string|必填) 要描述的表达式
+- timeZone: (string|可选) 要使用的时区。留空表示系统时区。或者，输入 UTC 或格式为 地区/区域 的时区 ([列表](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones))
+
+## 附加信息
+
+### ⏰ CronExpression
+CRON 表达式，日期，逗号分隔的日期列表或日期数组。
+
+##### 📅 日期或日期序列格式
+当您希望使用固定日期或日期序列时，表达式可以是字符串日期，逗号分隔的日期列表，日期数组 (数组可以包含字符串、日期对象和时间戳的混合)。指定字符串日期时，可以使用时区，例如 "2020-01-01 00:00 GMT+2"。甚至可以混合使用时区，例如 "2020-01-01 00:00 GMT+2, 2020-01-01 00:00 GMT-7"。
+
+##### ⏲️ CRON 格式
+```
+* * * * * * *    字段               允许值            特殊符号
+| | | | | | |    -----------------  ---------------   ---------------
+`-|-|-|-|-|-|->  秒 (可选)          0-59              * / , -
+  `-|-|-|-|-|->  分                 0-59              * / , -
+    `-|-|-|-|->  小时               0-23              * / , -
+      `-|-|-|->  日                 1-31              * / , - ? L W
+        `-|-|->  月                 1-12 or JAN-DEC   * / , -
+          `-|->  星期               0-7 or SUN-SAT    * / , - ? L #
+            `->  年 (可选)          1970-2099         * / , -
+```
+
+##### 📝 备注
+- `*` 星号表示 cron 表达式匹配字段的所有值。例如，分钟字段中的 "*" 表示每分钟。
+- `?` 问号用于指定 '无特定值'，允许用于日和星期字段。使用它代替星号 (*) 以将日或星期字段留空。
+- `-` 连字符用于定义范围。例如，小时字段中的 "10-12" 表示 10、11 和 12 点。
+- `,` 逗号用于分隔列表项。例如，星期字段中的 "MON,WED,FRI" 表示星期一、星期三和星期五。
+- `/` 斜杠用于表示增量。例如，秒字段中的 "0/15" 表示秒 0, 15, 30, 和 45。此外，日字段中的 "1/3" 表示从该月第一天开始每 3 天。
+- `L` "last" (最后) 的简写，允许用于日和星期字段。字符 "L" 在这两个字段中含义不同。例如，日字段中的 "L" 表示该月的最后一天。如果在星期字段中使用，则表示 7 或 SAT (星期六)。但是，如果在星期字段中的另一个值之后使用它，则表示该月的最后一个 xxx 日。例如，星期字段中的 "6L" 表示该月的最后一个星期五。
+- `W` "weekday" (工作日) 的简写，允许用于日字段。字符 "W" 用于指定最接近给定日期的工作日。例如，日字段中的 "15W" 表示最接近该月 15 日的工作日。因此，如果 15 日是星期六，则任务在 14 日星期五运行。"L" 和 "W" 字符可以在日字段中组合使用。例如，"LW" 表示该月的最后一个工作日。
+- `#` 井号指定构造。例如，星期字段中的 "6#3" 表示该月的第三个星期五。
+
+##### 📖 示例
+- `* * * * * *` 每秒
+- `0 * * * * *` 每分
+- `0 */10 * * * *` 每 10 分钟
+- `0 */20 1 * * *` 每 20 分钟，在 01:00 AM 和 01:59 AM 之间
+- `0 15,30,45 * * * *` 在每小时的 15, 30, 和 45 分
+- `0 0 12 * * *` 每天中午 - 12pm
+- `0 0 2 29 FEB * 2020/4` 在 02:00 AM，2 月 29 日 (闰年)
+- `0 0 7 * * MON#1 *` 在 07:00 AM，每月的第一个星期一
+- `0 0 12 * JAN,FEB,MAR,APR *` 每天中午，在 1, 2, 3, 4 月
+- `* * 1W * *` 每分钟，在每月的第一个工作日
+- `* * * * Tue#3` 每分钟，在每月的第三个星期二
+- `0 12 * * MONL` 在 12:00 PM，在每月的最后一个星期一
+
+请参阅 [这里](https://github.com/jaclarke/cronosjs) 获取更多示例和信息。
+
+#### 🌅 太阳能事件
+| 事件 ID | 事件 | 信息 |
+|----------|-------|-------------|
+| nightEnd | 夜间结束 / 天文黎明 | 夜间结束，天文曙光开始 (-18°) |
+| nauticalDawn | 航海黎明 | 天文曙光结束，航海曙光开始 (-12°) |
+| civilDawn | 民用黎明 / 黄金时刻 | 航海曙光结束，民用曙光和黄金时刻开始 (-6°) |
+| sunrise | 日出 | 太阳上边缘出现在地平线上 (-0.833°) |
+| sunriseEnd | 日出结束 | 太阳下边缘接触地平线 (-0.3°) |
+| morningGoldenHourEnd | 早晨黄金时刻结束 | 当太阳在地平线上方 6 度时 (6°) |
+| solarNoon | 太阳正午 | 太阳处于最高位置 |
+| eveningGoldenHourStart | 傍晚黄金时刻开始 | 当太阳在地平线上方 6 度时 (6°) |
+| sunsetStart | 日落开始 | 太阳下边缘接触地平线 (-0.3°) |
+| sunset | 日落 | 民用暮光开始，太阳消失在地平线以下 (-0.833°) |
+| civilDusk | 民用黄昏 / 黄金时刻结束 | 民用暮光和黄金时刻结束，航海暮光开始 (-6°) |
+| nauticalDusk | 航海黄昏 | 航海暮光结束，天文暮光开始 (-12°) |
+| nightStart | 天文黄昏 / 夜间开始 | 天文暮光结束，夜间开始 (-18°) |
+| nadir | 太阳午夜 | 当太阳最接近天底且夜间与黄昏和黎明等距时 |
+
+#### 📝 一般说明
+- 添加具有相同名称的现有调度将替换现有调度
+- 当 ui-scheduler 节点响应命令输出 msg 时，`msg.commandResponse` 将为 `true` 以指示消息是对命令的响应，而不是计划事件
+- 当 ui-scheduler 节点输出 cron/solar 事件的 msg 时，`msg.scheduledEvent` 将为 `true` 以指示消息是由于计划事件，而不是控制响应
+</script>

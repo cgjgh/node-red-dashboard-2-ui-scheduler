@@ -1,0 +1,535 @@
+<script type="text/javascript">
+    function _popoutSchedulerHelp(tag) {
+        const startTag = (name) => `<${name}>`
+        const endTag = (name) => `</${name}>`
+        const winHtml = `
+            ${startTag('html')}
+                ${startTag('head')}
+                    ${startTag('title')}pomoc ui-scheduler${endTag('title')}
+                    ${startTag('style')}
+                    .fade-in {
+                        transition: opacity 1.5s ease-in-out;
+                    }
+                    .hidden {
+                        opacity: 0;
+                        visibility: hidden;
+                    }
+                    ${endTag('style')}
+                ${endTag('head')}
+                ${startTag('body')}
+                    ${startTag('script')}
+                        const styles = ${JSON.stringify([].map.call(document.querySelectorAll('[rel="stylesheet"]'), e => e.href))}
+                        const head = document.head || document.getElementsByTagName('head')[0]
+                        styles.forEach(href => {
+                            const el = document.createElement('link');
+                            el.rel="stylesheet"
+                            el.href = href
+                            head.appendChild(el);
+                        })
+                    ${endTag('script')}
+                    <div class="red-ui-editor help-content hidden" style="height: 100%">
+                        <div class="red-ui-sidebar-info">
+                            <div class="red-ui-sidebar-help-stack red-ui-panels" style="height: 100%;">
+                                <div class="red-ui-panel" style="overflow-y: auto;height: 100%;">
+                                    <div class="red-ui-help" style="padding: 6px;height: 100%;">
+                                        <h1 class="red-ui-help-title">ui-scheduler</h1>
+                                        <div class="red-ui-help">
+                                            <span class="red-ui-text-bidi-aware">
+                                                ${RED.nodes.getNodeHelp('ui-scheduler')}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    ${startTag('script')}
+                        if (navigator.clipboard) {
+                            document.querySelector('.ui-scheduler-link-button').classList.add('hidden')
+                            const content = document.querySelector('.help-content');
+                            content.classList.add('hidden')
+                            content.classList.remove('hidden')
+                            content.classList.add('fade-in')
+                            const copyButtonLabel = "Kopiuj"
+                            const blocks = document.querySelectorAll("pre.ui-scheduler-code")
+                            blocks.forEach((block) => {
+                                const button = document.createElement("button")
+                                button.innerText = copyButtonLabel
+                                button.classList.add('ui-scheduler-copy-button')
+                                button.addEventListener("click", copyCode)
+                                block.appendChild(button)
+                            })
+                        }
+                        async function copyCode(event) {
+                            const button = event.srcElement
+                            const pre = button.parentElement
+                            const code = pre.querySelector("code")
+                            const text = code.innerText
+                            await navigator.clipboard.writeText(text)
+                        }
+                    ${endTag('script')}
+                ${endTag('body')}
+            ${endTag('html')}`
+
+        const BOM = new Uint8Array([0xEF, 0xBB, 0xBF])
+        const winUrl = URL.createObjectURL(
+            new Blob([BOM, winHtml], { encoding: 'UTF-8', type: 'text/html;charset=UTF-8' })
+        )
+        const win = window.open(
+            winUrl + (tag ? '#' + tag : ''),
+            'win',
+            'width=800,height=600'
+        )
+    }
+</script>
+
+<script type="text/markdown" data-help-name="ui-scheduler">
+
+    # 🕙 Dokumentacja pomocy UI Scheduler
+
+Ten dokument zawiera kompleksowy przewodnik po konfiguracji ustawień węzła UI Scheduler, użyciu w interfejsie Dashboard i dodatkowych informacjach. UI Scheduler pozwala użytkownikom na automatyzację zadań w oparciu o czas, zdarzenia solarne lub wyrażenia cron.
+
+## 👆 Używanie UI Scheduler w Dashboard 2.0
+
+#### 🖥️ Główny interfejs
+
+- **🛠️ Pasek narzędzi**: 
+  - **🔍 Wybór tematu**: Filtruj harmonogramy według tematu.
+  - **➕ Przycisk dodawania harmonogramu**: Otwórz okno dialogowe, aby utworzyć nowy harmonogram.
+  - **☰ Menu**: Uzyskaj dostęp do dodatkowych opcji, takich jak sprawdzanie aktualizacji lub zgłaszanie problemów.
+
+- **📋 Tabela harmonogramów**: Wyświetla wszystkie harmonogramy ze szczegółami takimi jak nazwa, opis i status. Możesz rozwinąć wiersze, aby zobaczyć więcej szczegółów.
+
+#### 🗓️ Tworzenie harmonogramu
+
+1. **🖱️ Otwórz okno harmonogramu**: Kliknij przycisk ➕ na pasku narzędzi.
+2. **✏️ Wprowadź szczegóły harmonogramu**:
+   - **🏷️ Nazwa**: Wprowadź unikalną nazwę dla harmonogramu.
+   - **📂 Temat**: Wybierz temat z listy rozwijanej. Tematy są zdefiniowane w **Ustawieniach węzła**
+   - **⏲️ Typ**: Wybierz harmonogram Czasowy, Solarny lub Cron.
+   - **🔄 Okres**: Dla harmonogramów czasowych wybierz okres powtarzania.
+   - **🕒 Czas/Data**: Ustaw czas rozpoczęcia i, jeśli dotyczy, czas zakończenia lub czas trwania.
+   - **📦 Ładunek (Payload)**: Wybierz typ ładunku i zdefiniuj niestandardowe ładunki, jeśli są potrzebne.
+3. **💾 Zapisz harmonogram**: Kliknij "Zapisz", aby dodać harmonogram.
+
+#### ✏️ Edycja harmonogramu
+
+- **🖊️ Edytuj**: Kliknij harmonogram w tabeli, aby rozwinąć wiersze i zobaczyć więcej szczegółów. Kliknij ikonę ołówka, aby otworzyć okno edycji. Wprowadź zmiany i zapisz.
+- - **🗑️ Usuń**: Kliknij ikonę usuwania, aby usunąć harmonogram.
+
+#### 🔄 Import i eksport harmonogramów
+
+- **📤 Eksport**: Kliknij ikonę eksportu, aby skopiować JSON harmonogramu do schowka. _Dostępne tylko podczas edycji harmonogramu._
+- **📥 Import**: Kliknij ikonę importu i wklej JSON, aby zaimportować harmonogram. _Dostępne tylko podczas tworzenia harmonogramu._
+
+#### ⚙️ Zarządzanie harmonogramami
+
+- **🔄 Włącz/Wyłącz**: Użyj przełącznika, aby włączyć lub wyłączyć harmonogramy.
+
+### 🚀 Zaawansowane funkcje
+
+#### 🌞 Zdarzenia solarne
+
+- Dostosuj harmonogramy w oparciu o zdarzenia solarne z przesunięciami.
+- Obsługiwane zdarzenia obejmują wschód słońca, zachód słońca i różne fazy zmierzchu.
+
+#### ⏰ Wyrażenia Cron
+
+- Użyj składni cron dla złożonych potrzeb harmonogramowania.
+- Obsługuje standardowe pola cron i znaki specjalne.
+
+#### 📦 Niestandardowe ładunki (Payloads)
+
+- Używaj niestandardowych ładunków dla wyjścia harmonogramu. Ładunki są zdefiniowane w **Ustawieniach węzła**
+- Obsługuje JSON i inne formaty danych.
+
+## 🛠️ Ustawienia węzła
+
+#### 🏷️ Nazwa
+- **Pole**: `Nazwa`
+- **Opis**: Wprowadź unikalną nazwę dla harmonogramu. Ta nazwa będzie używana do identyfikacji harmonogramu w systemie.
+- **Typ wejścia**: Tekst (string)
+
+#### 👥 Grupa
+- **Pole**: `Grupa`
+- **Opis**: Wybierz grupę, do której należy ten harmonogram. Grupy pomagają organizować widżety w interfejsie użytkownika.
+- **Typ wejścia**: Lista rozwijana (string)
+
+#### 📏 Rozmiar
+- **Pole**: `Rozmiar`
+- **Opis**: Dostosuj rozmiar widżetu harmonogramu w interfejsie użytkownika. Można to ustawić ręcznie lub za pomocą narzędzia do zmiany rozmiaru elementów.
+- **Typ wejścia**: Przycisk (Element Sizer)
+
+#### 🏷️ Etykieta
+- **Pole**: `Etykieta`
+- **Opis**: Ustaw etykietę dla harmonogramu, która będzie wyświetlana w interfejsie użytkownika.
+- **Typ wejścia**: Tekst (string)
+
+### 🌍 Ustawienia lokalizacji
+
+#### 🌐 Język
+- **Pole**: `Język`
+- **Opis**: Wybierz język interfejsu harmonogramu. 
+  - Obsługiwane języki to Angielski, Niemiecki, Francuski, Włoski, Holenderski i Hiszpański.
+  - Edytuj również <code>~/.node-red/settings.js</code> i dodaj/odkomentuj następującą linię: <code>lang: 'pl'</code>. 
+Dostępne kody języków to: <code>en</code>, <code>de</code>, <code>fr</code>, <code>it</code>, <code>nl</code>, <code>es</code>, <code>pl</code>, <code>cs</code>, <code>zh-CN</code>
+To ustawi język używany w węźle UI Scheduler na serwerze Node-Red.
+- **Typ wejścia**: Lista rozwijana (string)
+
+#### ⏰ Strefa czasowa
+- **Pole**: `Strefa czasowa`
+- **Opis**: Określ strefę czasową dla harmonogramu. Wpływa to na sposób obliczania i wyświetlania czasów.
+  - Pozostaw puste dla strefy czasowej systemu. 
+  - Alternatywnie wprowadź UTC lub strefę czasową w formacie Region/Obszar ([lista](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)).
+- **Typ wejścia**: Tekst z autouzupełnianiem (string)
+
+#### 🕒 Format 24-godzinny
+- **Pole**: `Użyj formatu 24-godzinnego`
+- **Opis**: Przełącz między formatem 24-godzinnym a 12-godzinnym.
+- **Typ wejścia**: Pole wyboru (boolean)
+
+### 📍 Ustawienia lokalizacji
+
+#### 🌐 Lokalizacja
+- **Pole**: `Lokalizacja`
+- **Opis**: Ustaw domyślną lokalizację geograficzną dla obliczeń zdarzeń solarnych. Może to być stała lokalizacja lub zmienna środowiskowa.
+- **Typ wejścia**: Typed Input (string)
+
+### 📤 Ustawienia wyjścia
+
+#### 📬 Wyjście komunikatów odpowiedzi
+- **Pole**: `Wyjście komunikatów odpowiedzi`
+- **Opis**: Wybierz sposób wysyłania odpowiedzi na polecenia. Opcje obejmują:
+  - 1 wyjście: Wszystkie wiadomości na wyjście 1 (harmonogramy + odpowiedzi na polecenia)
+  - 2 wyjścia: Odpowiedzi na polecenia na wyjście 1, Wiadomości harmonogramu na wyjście 2
+  - Fan out: Oddzielne wyjścia dla wiadomości poleceń i każdego tematu
+- **Typ wejścia**: Lista rozwijana (string)
+
+#### 📝 Właściwość wyjściowa
+- **Pole**: `Pole wyjściowe`
+- **Opis**: Określ właściwość w obiekcie wiadomości, w której będzie przechowywane wyjście.
+  - np. jeśli 'Pole wyjściowe' jest ustawione na **data.value**, to `msg.data.value` będzie zawierać wartość *payload*
+  - `msg.topic` będzie zawierać nazwę tematu. Upraszcza to oddzielenie, który harmonogram został wyzwolony
+  - Dodatkowe właściwości są również dodawane do obiektu msg. Sprawdź wyjście debugowania (użyj pokaż pełną wiadomość)
+
+- **Typ wejścia**: Typed Input (string)
+
+### 📊 Ustawienia stanu
+
+#### 📅 Wyślij stan harmonogramów
+- **Pole**: `Wyślij stan harmonogramów`
+- **Opis**: Skonfiguruj jak często wysyłany jest stan harmonogramów i czy wysyłać stany aktywne czy nieaktywne.
+  - Jest to grupowane według tematu, więc jeśli dwa harmonogramy są `aktywne` (w zakresie czasu startu i końca) dla tego samego tematu, zostanie wysłana tylko jedna wiadomość z payload `true`. 
+  - Podobnie, jeśli jeden harmonogram dla tematu jest `nieaktywny`, a drugi jest `aktywny`, zostanie wysłana tylko jedna wiadomość z payload `true`. 
+  - Jeśli oba harmonogramy są `nieaktywne`, zostanie wysłana tylko jedna wiadomość z payload `false`.
+- **Typ wejścia**: Liczba (Interwał), Pole wyboru (Stan Aktywny/Nieaktywny) (number, boolean)
+
+### 💾 Ustawienia przechowywania
+
+#### 🗄️ Nazwa magazynu
+- **Pole**: `Nazwa magazynu`
+- **Opis**: Wybierz metodę przechowywania dla utrwalania harmonogramów. Opcje obejmują:
+  - Brak: Nie utrwalaj harmonogramów. Harmonogramy zostaną utracone po ponownym wdrożeniu węzła
+  - Lokalny system plików: Utrwalaj harmonogramy w lokalnym systemie plików. Harmonogramy są zapisywane w katalogu o nazwie `schedulerdata` w twoim folderze node-red
+  - Magazyny kontekstu węzła: Utrwalaj harmonogramy w kontekście węzła. Te magazyny będą automatycznie ładowane z pliku ustawień node-red. Zobacz dokumentację [Node-RED Contexts](https://nodered.org/docs/user-guide/context) po więcej informacji.
+- **Typ wejścia**: Lista rozwijana (string)
+
+### 📨 Tematy i Ładunki (Payloads)
+
+#### 🗂️ Tematy
+- **Pole**: `Tematy`
+- **Opis**: Zdefiniuj tematy dla harmonogramu. Tematy pomagają kategoryzować i zarządzać harmonogramami.
+  - Te tematy mogą być używane w polu `Temat` harmonogramów i mogą być wybierane w interfejsie Dashboard 2.0. 
+  - W trybie Fan Out, wiadomości harmonogramu będą wysyłane na wyjście odpowiadające tematowi.
+- **Typ wejścia**: Edytowalna lista (string)
+
+#### 📦 Niestandardowe Ładunki (Payloads)
+- **Pole**: `Niestandardowe Ładunki`
+- **Opis**: Zdefiniuj niestandardowe ładunki do wysłania, gdy harmonogram zostanie wyzwolony. 
+  - Ładunki mogą być różnego typu, w tym string, number, boolean i JSON.
+  - Ładunki zdefiniowane tutaj mogą być wybierane w interfejsie Dashboard.
+  - Zmiana wartości ładunku tutaj automatycznie zaktualizuje wartości ładunku wszystkich harmonogramów używających tego ładunku 
+- **Typ wejścia**: Edytowalna lista z Typed Input (string, number, boolean, JSON)
+
+### ⚙️ Zaawansowane ustawienia
+
+#### 🕰️ Użyj nowego wyboru czasu
+- **Pole**: `Użyj nowego wyboru czasu`
+- **Opis**: Włącz lub wyłącz nowy interfejs wyboru czasu.
+- **Typ wejścia**: Pole wyboru (boolean)
+
+## 🔧 Wejścia (Zaawansowane użycie)
+
+#### Temat
+Większość poleceń może być podana w temacie z nazwą harmonogramu w ładunku (gdzie to stosowne). Obsługiwane tematy poleceń...
+
+- trigger
+- status
+- export
+- remove
+- pause
+- stop
+- start
+
+Obejmuje to tematy poleceń `-all`, `-all-dynamic`, `-all-static`, `-topic`, `-active`,  `-active-dynamic`,  `-active-static`, `-inactive`, `-inactive-dynamic` i `-inactive-static` (np. export-all, stop-all-dynamic, start-all-static, remove-inactive-dynamic). Zobacz [polecenia](#ui-scheduler-commands-info) poniżej po szczegóły.
+
+#### 📦 Ładunek (Payload)
+Możliwe jest dynamiczne dodawanie, usuwanie i kontrolowanie harmonogramów poprzez wstrzyknięcie ładunku do węzła. Format obiektu ładunku (lub tablicy obiektów) zależy od operacji. Zobacz poniżej po szczegóły. Możesz również eksportować harmonogramy z interfejsu Dashboard w oknie edycji i wkleić wynikowy JSON.
+
+#### ➕ Dodawanie jednego (lub więcej) harmonogramów
+Przykład...
+```json
+payload: {
+  "command": "add",
+  "schedule": [
+    {
+      "name": "Schedule",
+      "topic": "Topic 1",
+      "enabled": true,
+      "scheduleType": "time",
+      "period": "daily",
+      "time": "00:00",
+      "endTime": null,
+      "days": [
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday"
+      ],
+      "payloadType": true,
+      "payloadValue": true
+    },
+    {
+      "name": "Schedule 2",
+      "topic": "Topic 1",
+      "enabled": true,
+      "scheduleType": "solar",
+      "timespan": "time",
+      "solarEvent": "sunrise",
+      "offset": 5,
+      "solarEventStart": false,
+      "solarEventTimespanTime": "21:00",
+      "payloadType": "true_false",
+      "payloadValue": true,
+      "endPayloadValue": false
+    },
+    {
+      "name": "Schedule 3",
+      "topic": "Topic 1",
+      "enabled": true,
+      "scheduleType": "time",
+      "period": "minutes",
+      "duration": 1,
+      "timespan": "duration",
+      "minutesInterval": 7,
+      "payloadType": "true_false",
+      "payloadValue": true,
+      "endPayloadValue": false
+    }
+  ]
+}
+```
+
+### 📊 Pobieranie statusu harmonogramu lub usuwanie / zatrzymywanie / pauzowanie / uruchamianie harmonogramu
+
+#### Metoda Tematu
+```json
+msg.topic = "command"; // command name - *see details below*,
+msg.payload = "name"; //  name of the schedule
+```
+
+#### Metoda Ładunku (Payload)
+```json
+payload: {
+  "command": "*patrz szczegóły poniżej*",
+  "name": "* nazwa harmonogramu",
+}
+```
+
+#### Szczegóły
+- command: (string|wymagane) Operacja do wykonania - może to być jedna z poniższych...
+  - "trigger"
+  - "status"
+  - "export"
+  - "remove"
+  - "stop"
+  - "pause"
+  - "start"
+- name: (string|opcjonalne) Nazwa harmonogramu, którego to dotyczy (nie wymagane przy użyciu filtrów -all, -active lub -inactive)
+
+#### 📝 Uwagi
+- `trigger` uruchamia harmonogram o nazwie w `msg.payload`
+- `status` zwraca obiekt z konfiguracją i statusem nazwanego harmonogramu
+- `export` zwraca obiekt z konfiguracją nazwanego harmonogramu
+- `remove` zatrzyma i usunie harmonogram. Ta opcja nie ma wyjścia.
+- `stop` zatrzyma harmonogram określony przez `name` i zresetuje jego licznik wewnętrzny. Ta opcja nie ma wyjścia.
+- `pause` zatrzyma harmonogram określony przez `name`, ale nie zresetuje jego licznika wewnętrznego. Ta opcja nie ma wyjścia.
+- `start` (ponownie) uruchomi wszystkie harmonogramy. Każdy harmonogram, który osiągnął swój limit, rozpocznie się od początku. Wstrzymane harmonogramy zostaną wznowione. Ta opcja nie ma wyjścia.
+- FILTR: dodanie `-all` do dowolnego z tych poleceń zadziała na wszystkich harmonogramach. np. `status-all` zwróci status wszystkich harmonogramów
+- FILTR: dodanie `-all-dynamic` do dowolnego z tych poleceń wpłynie tylko na harmonogramy dynamiczne np. `remove-all-dynamic` usunie wszystkie harmonogramy dynamiczne
+- FILTR: dodanie `-all-static` do dowolnego z tych poleceń wpłynie tylko na harmonogramy statyczne np. `stop-all-static`
+- FILTR: dodanie `-topic` do dowolnego z tych poleceń wpłynie tylko na harmonogramy, których temat pasuje do tematu określonego w ładunku np. `stop-topic`
+- FILTR: dodanie `-active` do poleceń status, export i remove zadziała na wszystkich aktywnych harmonogramach. np. `status-active`
+- FILTR: dodanie `-active-static` do poleceń status, export i remove zadziała na wszystkich statycznych harmonogramach, które są aktywne. np. `status-active-static`
+- FILTR: dodanie `-active-dynamic` do poleceń status, export i remove zadziała na wszystkich dynamicznych harmonogramach, które są aktywne. np. `status-active-dynamic`
+- FILTR: dodanie `-inactive` do poleceń status, export i remove zadziała na wszystkich nieaktywnych harmonogramach. np. `status-inactive`
+- FILTR: dodanie `-inactive-static` do poleceń status, export i remove zadziała na wszystkich statycznych harmonogramach, które są nieaktywne. np. `status-inactive-static`
+- FILTR: dodanie `-inactive-dynamic` do poleceń status, export i remove zadziała na wszystkich dynamicznych harmonogramach, które są nieaktywne. np. `status-inactive-dynamic`
+
+#### 📖 Przykłady
+- Użycie prostego polecenia tematu, aby ręcznie wyzwolić harmonogram o nazwie "schedule1"
+  ```json
+  msg: {
+    "topic": "trigger",
+    "payload": "schedule1"
+  }
+  ```
+- Użycie prostego polecenia tematu z tematem w ładunku, aby uruchomić wszystkie harmonogramy z określonym tematem
+  ```json
+  msg: {
+    "topic": "start-topic",
+    "payload": { "topic": "Topic 1" }
+  }
+  ```
+- Użycie prostego polecenia tematu, aby wyeksportować wszystkie dynamicznie dodane harmonogramy...
+  ```json
+  msg: {
+    "topic": "export-all-dynamic"
+  }
+  ```
+- Użycie prostego polecenia tematu, aby usunąć harmonogram o nazwie "schedule1"
+  ```json
+  msg: {
+    "topic": "remove",
+    "payload": "schedule1"
+  }
+  ```
+- Użycie ładunku cmd, aby wstrzymać wszystkie harmonogramy...
+  ```json
+  payload: {
+    "command": "pause-all"
+  }
+  ```
+- Użycie prostego polecenia tematu, aby usunąć wszystkie harmonogramy dynamiczne, które zakończyły działanie
+  ```json
+  msg: {
+    "topic": "remove-inactive-dynamic"
+  }
+  ```
+
+### 🔍 Describe
+
+#### Przykład: ładunek cmd do opisania wyrażenia cron
+```json
+{
+  "command": "describe",
+  "expressionType": "cron",
+  "expression": "0 */5 * * * MON *",
+  "timeZone": "Europe/London"
+}
+```
+
+#### Przykład: ładunek cmd do pobrania wszystkich czasów zdarzeń solarnych + stanu solarnego w tym czasie
+```json
+{
+  "command": "describe",
+  "expressionType": "solar",
+  "location": "54.9992500,-1.4170300",
+  "solarType": "all",
+  "timeZone": "Europe/London"
+}
+```
+
+#### Przykład: ładunek cmd do pobrania 4 czasów zdarzeń solarnych + słonecznych dla określonego punktu w czasie
+```json
+{
+  "command": "describe",
+  "expressionType": "solar",
+  "time": "2020-03-22 18:40",
+  "location": "54.9992500,-1.4170300",
+  "solarType": "selected",
+  "solarEvents": "civilDawn,sunrise,sunset,civilDusk",
+  "timeZone": "Europe/London"
+}
+```
+
+#### Szczegóły
+Zwraca obiekt w ładunku zawierający czytelne dla człowieka informacje dla podanego wyrażenia.
+
+- command: (string|wymagane) Operacja do wykonania
+- expression: (string|wymagane) Wyrażenie do opisania
+- timeZone: (string|opcjonalne) Strefa czasowa do użycia. Pozostaw puste dla strefy czasowej systemu. Alternatywnie wprowadź UTC lub strefę czasową w formacie Region/Obszar ([lista](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones))
+
+## Dodatkowe Info
+
+### ⏰ CronExpression
+Wyrażenie CRON, data, lista dat oddzielona przecinkami lub tablica dat.
+
+##### 📅 Data lub Format Sekwencji Dat
+Gdy chcesz użyć stałej daty lub sekwencji dat, wyrażenie może być datą w formacie tekstowym, listą dat oddzieloną przecinkami, tablicą dat (Tablica może zawierać mieszankę ciągów znaków, obiektów daty i znaczników czasu). Podczas określania daty w formacie tekstowym, możesz użyć strefy czasowej np. "2020-01-01 00:00 GMT+2". Możesz nawet mieszać strefy czasowe np. "2020-01-01 00:00 GMT+2, 2020-01-01 00:00 GMT-7".
+
+##### ⏲️ Format CRON
+```
+* * * * * * *    Pole               Dozwolone wartości Symbole specjalne
+| | | | | | |    -----------------  ---------------   ---------------
+`-|-|-|-|-|-|->  Sekunda (opcja)    0-59              * / , -
+  `-|-|-|-|-|->  Minuta             0-59              * / , -
+    `-|-|-|-|->  Godzina            0-23              * / , -
+      `-|-|-|->  Dzień miesiąca     1-31              * / , - ? L W
+        `-|-|->  Miesiąc            1-12 or JAN-DEC   * / , -
+          `-|->  Dzień tygodnia     0-7 or SUN-SAT    * / , - ? L #
+            `->  Rok (opcja)        1970-2099         * / , -
+```
+
+##### 📝 Uwagi
+- `*` Gwiazdki wskazują, że wyrażenie cron pasuje do wszystkich wartości pola. Na przykład "*" w polu minut oznacza każdą minutę.
+- `?` Znaki zapytania są używane do określenia 'braku konkretnej wartości' i są dozwolone dla pól dzień miesiąca i dzień tygodnia. Używa się ich zamiast gwiazdki (*) do pozostawienia pola dzień miesiąca lub dzień tygodnia pustego.
+- `-` Myślniki są używane do definiowania zakresów. Na przykład "10-12" w polu godziny oznacza godziny 10, 11 i 12.
+- `,` Przecinki są używane do oddzielania elementów listy. Na przykład "MON,WED,FRI" w polu dnia tygodnia oznacza dni Poniedziałek, Środa i Piątek.
+- `/` Ukośniki są używane do wskazywania przyrostów. Na przykład "0/15" w polu sekund oznacza sekundy 0, 15, 30 i 45. Dodatkowo "1/3" w polu dnia miesiąca oznacza co 3 dni zaczynając od pierwszego dnia miesiąca.
+- `L` Skrót od "last" (ostatni) i jest dozwolony dla pól dzień miesiąca i dzień tygodnia. Znak "L" ma inne znaczenie w każdym z tych dwóch pól. Na przykład "L" w polu dnia miesiąca oznacza ostatni dzień miesiąca. Jeśli użyty w polu dnia tygodnia, oznacza 7 lub SAT (Sobota). Jednakże, jeśli użyty w polu dnia tygodnia po innej wartości, oznacza ostatni dzień xxx miesiąca. Na przykład "6L" w polu dnia tygodnia oznacza ostatni Piątek miesiąca.
+- `W` Skrót od "weekday" (dzień roboczy) i jest dozwolony dla pola dnia miesiąca. Znak "W" jest używany do określenia dnia roboczego najbliższego danemu dniu. Na przykład "15W" w polu dnia miesiąca oznacza najbliższy dzień roboczy do 15-go dnia miesiąca. Zatem, jeśli 15-ty to Sobota, zadanie uruchomi się w Piątek 14-go. Znaki "L" i "W" mogą być łączone w polu dnia miesiąca. Na przykład "LW" oznacza ostatni dzień roboczy miesiąca.
+- `#` Znaki hash określają konstrukcje. Na przykład "6#3" w polu dnia tygodnia oznacza trzeci Piątek miesiąca.
+
+##### 📖 Przykłady
+- `* * * * * *` Co sekundę
+- `0 * * * * *` Co minutę
+- `0 */10 * * * *` Co 10 minut
+- `0 */20 1 * * *` Co 20 minut, między 01:00 AM a 01:59 AM
+- `0 15,30,45 * * * *` W 15, 30 i 45 minucie po godzinie
+- `0 0 12 * * *` Codziennie w południe - 12pm
+- `0 0 2 29 FEB * 2020/4` O 02:00 AM, w dniu 29 Lutego (lata przestępne)
+- `0 0 7 * * MON#1 *` O 07:00 AM, w pierwszy Poniedziałek miesiąca
+- `0 0 12 * JAN,FEB,MAR,APR *` Codziennie w południe w Styczniu, Lutym, Marcu i Kwietniu
+- `* * 1W * *` Co minutę, w pierwszy dzień roboczy miesiąca
+- `* * * * Tue#3` Co minutę, w trzeci Wtorek miesiąca
+- `0 12 * * MONL` O 12:00 PM, w ostatni Poniedziałek miesiąca
+
+Zobacz [tutaj](https://github.com/jaclarke/cronosjs) po więcej przykładów i informacji.
+
+#### 🌅 Zdarzenia Solarne
+| ID Zdarzenia | Zdarzenie | Informacja |
+|----------|-------|-------------|
+| nightEnd | koniec nocy / świt astronomiczny | koniec nocy, początek zmierzchu astronomicznego (-18°) |
+| nauticalDawn | świt żeglarski | koniec zmierzchu astronomicznego, początek świtu żeglarskiego (-12°) |
+| civilDawn | świt cywilny / złota godzina | koniec świtu żeglarskiego, początek świtu cywilnego i złotej godziny (-6°) |
+| sunrise | wschód słońca | górna krawędź słońca pojawia się na horyzoncie (-0.833°) |
+| sunriseEnd | koniec wschodu słońca | dolna krawędź słońca dotyka horyzontu (-0.3°) |
+| morningGoldenHourEnd | koniec porannej złotej godziny | gdy słońce jest 6 stopni nad horyzontem (6°) |
+| solarNoon | południe słoneczne | słońce jest w najwyższej pozycji |
+| eveningGoldenHourStart | początek wieczornej złotej godziny | gdy słońce jest 6 stopni nad horyzontem (6°) |
+| sunsetStart | początek zachodu słońca | dolna krawędź słońca dotyka horyzontu (-0.3°) |
+| sunset | zachód słońca | początek zmierzchu cywilnego, słońce znika pod horyzontem (-0.833°) |
+| civilDusk | zmierzch cywilny / koniec złotej godziny | koniec zmierzchu cywilnego i złotej godziny, początek zmierzchu żeglarskiego (-6°) |
+| nauticalDusk | zmierzch żeglarski | koniec zmierzchu żeglarskiego, początek zmierzchu astronomicznego (-12°) |
+| nightStart | zmierzch astronomiczny / początek nocy | koniec zmierzchu astronomicznego, początek nocy (-18°) |
+| nadir | północ słoneczna | gdy słońce jest najbliżej nadiru i noc jest w równej odległości od zmierzchu i świtu |
+
+#### 📝 Uwagi Ogólne
+- Dodanie harmonogramu o tej samej nazwie jak istniejący harmonogram zastąpi ten istniejący
+- Gdy węzeł ui-scheduler wysyła msg w odpowiedzi na polecenie, `msg.commandResponse` będzie `true` aby wskazać, że wiadomość jest odpowiedzią na polecenie a nie zaplanowanym zdarzeniem
+- Gdy węzeł ui-scheduler wysyła msg dla zdarzenia cron/solar, `msg.scheduledEvent` będzie `true` aby wskazać, że wiadomość jest wynikiem zaplanowanego zdarzenia a nie odpowiedzią kontrolną
+</script>

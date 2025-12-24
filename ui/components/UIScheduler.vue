@@ -492,7 +492,6 @@
                                     <v-icon v-else color="red" icon="mdi-close-circle" />
                                 </template>
                             </v-text-field>
-
                         </v-col>
                     </v-row>
 
@@ -1202,12 +1201,15 @@ import { useDisplay } from 'vuetify'
 import { mapState } from 'vuex'
 
 // Import translations
+import cs from '../locales/cs.json'
 import de from '../locales/de.json'
 import en from '../locales/en.json'
 import es from '../locales/es.json'
 import fr from '../locales/fr.json'
 import it from '../locales/it.json'
 import nl from '../locales/nl.json'
+import pl from '../locales/pl.json'
+import zhCN from '../locales/zh-CN.json'
 
 import CronFieldsTable from './CronFieldsTable.vue'
 import CronSpecialCharacters from './CronSpecialCharacters.vue'
@@ -1435,7 +1437,15 @@ export default {
         },
 
         fieldItems () {
-            return defaultItems(this.locale)
+            // Supported locales in @vue-js-cron/core
+            const cronSupported = ['en', 'de', 'fr', 'es', 'cn', 'pt', 'ru', 'ja', 'ko', 'da', 'he', 'hi']
+            let cronLocale = 'en'
+            if (cronSupported.includes(this.locale)) {
+                cronLocale = this.locale
+            } else if (this.locale === 'zh-CN') {
+                cronLocale = 'cn'
+            }
+            return defaultItems(cronLocale)
         },
 
         fields () {
@@ -1570,6 +1580,15 @@ export default {
                 break
             case 'nl':
                 baseMessages = nl
+                break
+            case 'pl':
+                baseMessages = pl
+                break
+            case 'cs':
+                baseMessages = cs
+                break
+            case 'zh-CN':
+                baseMessages = zhCN
                 break
             case 'en':
             default:
