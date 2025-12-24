@@ -1,0 +1,535 @@
+<script type="text/javascript">
+    function _popoutSchedulerHelp(tag) {
+        const startTag = (name) => `<${name}>`
+        const endTag = (name) => `</${name}>`
+        const winHtml = `
+            ${startTag('html')}
+                ${startTag('head')}
+                    ${startTag('title')}nápověda ui-scheduler${endTag('title')}
+                    ${startTag('style')}
+                    .fade-in {
+                        transition: opacity 1.5s ease-in-out;
+                    }
+                    .hidden {
+                        opacity: 0;
+                        visibility: hidden;
+                    }
+                    ${endTag('style')}
+                ${endTag('head')}
+                ${startTag('body')}
+                    ${startTag('script')}
+                        const styles = ${JSON.stringify([].map.call(document.querySelectorAll('[rel="stylesheet"]'), e => e.href))}
+                        const head = document.head || document.getElementsByTagName('head')[0]
+                        styles.forEach(href => {
+                            const el = document.createElement('link');
+                            el.rel="stylesheet"
+                            el.href = href
+                            head.appendChild(el);
+                        })
+                    ${endTag('script')}
+                    <div class="red-ui-editor help-content hidden" style="height: 100%">
+                        <div class="red-ui-sidebar-info">
+                            <div class="red-ui-sidebar-help-stack red-ui-panels" style="height: 100%;">
+                                <div class="red-ui-panel" style="overflow-y: auto;height: 100%;">
+                                    <div class="red-ui-help" style="padding: 6px;height: 100%;">
+                                        <h1 class="red-ui-help-title">ui-scheduler</h1>
+                                        <div class="red-ui-help">
+                                            <span class="red-ui-text-bidi-aware">
+                                                ${RED.nodes.getNodeHelp('ui-scheduler')}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    ${startTag('script')}
+                        if (navigator.clipboard) {
+                            document.querySelector('.ui-scheduler-link-button').classList.add('hidden')
+                            const content = document.querySelector('.help-content');
+                            content.classList.add('hidden')
+                            content.classList.remove('hidden')
+                            content.classList.add('fade-in')
+                            const copyButtonLabel = "Kopírovat"
+                            const blocks = document.querySelectorAll("pre.ui-scheduler-code")
+                            blocks.forEach((block) => {
+                                const button = document.createElement("button")
+                                button.innerText = copyButtonLabel
+                                button.classList.add('ui-scheduler-copy-button')
+                                button.addEventListener("click", copyCode)
+                                block.appendChild(button)
+                            })
+                        }
+                        async function copyCode(event) {
+                            const button = event.srcElement
+                            const pre = button.parentElement
+                            const code = pre.querySelector("code")
+                            const text = code.innerText
+                            await navigator.clipboard.writeText(text)
+                        }
+                    ${endTag('script')}
+                ${endTag('body')}
+            ${endTag('html')}`
+
+        const BOM = new Uint8Array([0xEF, 0xBB, 0xBF])
+        const winUrl = URL.createObjectURL(
+            new Blob([BOM, winHtml], { encoding: 'UTF-8', type: 'text/html;charset=UTF-8' })
+        )
+        const win = window.open(
+            winUrl + (tag ? '#' + tag : ''),
+            'win',
+            'width=800,height=600'
+        )
+    }
+</script>
+
+<script type="text/markdown" data-help-name="ui-scheduler">
+
+    # 🕙 Dokumentace nápovědy UI Scheduler
+
+Tento dokument poskytuje komplexního průvodce konfigurací nastavení uzlu UI Scheduler, použitím v rozhraní Dashboard a dalšími informacemi. UI Scheduler umožňuje uživatelům automatizovat úkoly na základě času, solárních událostí nebo cron výrazů.
+
+## 👆 Používání UI Scheduler v Dashboard 2.0
+
+#### 🖥️ Hlavní rozhraní
+
+- **🛠️ Panel nástrojů**: 
+  - **🔍 Výběr tématu**: Filtrování plánů podle tématu.
+  - **➕ Tlačítko Přidat plán**: Otevření dialogu pro vytvoření nového plánu.
+  - **☰ Nabídka**: Přístup k dalším možnostem, jako je kontrola aktualizací nebo nahlášení problému.
+
+- **📋 Tabulka plánů**: Zobrazuje všechny plány s podrobnostmi, jako je jméno, popis a stav. Můžete rozbalit řádky a zobrazit více podrobností.
+
+#### 🗓️ Vytvoření plánu
+
+1. **🖱️ Otevřít dialog plánu**: Klikněte na tlačítko ➕ v panelu nástrojů.
+2. **✏️ Zadat podrobnosti plánu**:
+   - **🏷️ Jméno**: Zadejte jedinečné jméno pro plán.
+   - **📂 Téma**: Vyberte téma z rozbalovací nabídky. Témata jsou definována v **Nastavení uzlu**
+   - **⏲️ Typ**: Vyberte plánování Čas (Time), Solární (Solar) nebo Cron.
+   - **🔄 Perioda**: Pro časové plány vyberte periodu opakování.
+   - **🕒 Čas/Datum**: Nastavte počáteční čas a případně koncový čas nebo dobu trvání.
+   - **📦 Dataset (Payload)**: Vyberte typ datasetu a v případě potřeby definujte vlastní datasety.
+3. **💾 Uložit plán**: Klikněte na "Uložit" pro přidání plánu.
+
+#### ✏️ Úprava plánu
+
+- **🖊️ Upravit**: Klikněte na plán v tabulce pro rozbalení řádků a zobrazení více podrobností. Kliknutím na ikonu tužky otevřete editační dialog. Proveďte změny a uložte.
+- - **🗑️ Smazat**: Kliknutím na ikonu mazání odstraníte plán.
+
+#### 🔄 Import a export plánů
+
+- **📤 Export**: Klikněte na ikonu exportu pro zkopírování JSON plánu do schránky. _K dispozici pouze při úpravě plánu._
+- **📥 Import**: Klikněte na ikonu importu a vložte JSON pro import plánu. _K dispozici pouze při vytváření plánu._
+
+#### ⚙️ Správa plánů
+
+- **🔄 Povolit/Zakázat**: Použijte přepínač pro povolení nebo zakázání plánů.
+
+### 🚀 Pokročilé funkce
+
+#### 🌞 Solární události
+
+- Přizpůsobte plány na základě solárních událostí s posuny.
+- Podporované události zahrnují východ slunce, západ slunce a různé fáze soumraku.
+
+#### ⏰ Cron výrazy
+
+- Použijte cron syntaxi pro složité potřeby plánování.
+- Podporuje standardní cron pole a speciální znaky.
+
+#### 📦 Vlastní datasety (Payloads)
+
+- Používejte vlastní datasety pro výstup plánu. Datasety jsou definovány v **Nastavení uzlu**
+- Podporuje JSON a další datové formáty.
+
+## 🛠️ Nastavení uzlu
+
+#### 🏷️ Jméno
+- **Pole**: `Jméno`
+- **Popis**: Zadejte jedinečné jméno pro plánovač. Toto jméno bude použito k identifikaci plánovače v systému.
+- **Typ vstupu**: Text (string)
+
+#### 👥 Skupina
+- **Pole**: `Skupina`
+- **Popis**: Vyberte skupinu, do které tento plánovač patří. Skupiny pomáhají organizovat widgety v uživatelském rozhraní.
+- **Typ vstupu**: Rozbalovací seznam (string)
+
+#### 📏 Velikost
+- **Pole**: `Velikost`
+- **Popis**: Upravte velikost widgetu plánovače v uživatelském rozhraní. Lze nastavit ručně nebo pomocí prvku sizer.
+- **Typ vstupu**: Tlačítko (Element Sizer)
+
+#### 🏷️ Štítek
+- **Pole**: `Štítek`
+- **Popis**: Nastavte štítek pro plánovač, který se zobrazí v uživatelském rozhraní.
+- **Typ vstupu**: Text (string)
+
+### 🌍 Nastavení lokalizace
+
+#### 🌐 Jazyk
+- **Pole**: `Jazyk`
+- **Popis**: Vyberte jazyk pro rozhraní plánovače. 
+  - Podporované jazyky zahrnují Angličtinu, Němčinu, Francouzštinu, Italštinu, Holandštinu a Španělštinu.
+  - Také upravte <code>~/.node-red/settings.js</code> a přidejte/odkomentujte následující řádek: <code>lang: 'cs'</code>. 
+Dostupné kódy jazyků jsou: <code>en</code>, <code>de</code>, <code>fr</code>, <code>it</code>, <code>nl</code>, <code>es</code>, <code>pl</code>, <code>cs</code>, <code>zh-CN</code>
+Tímto se nastaví jazyk používaný v uzlu UI Scheduler na serveru Node-Red.
+- **Typ vstupu**: Rozbalovací seznam (string)
+
+#### ⏰ Časové pásmo
+- **Pole**: `Časové pásmo`
+- **Popis**: Určete časové pásmo pro plánovač. To ovlivňuje, jak se vypočítávají a zobrazují časy.
+  - Nechte prázdné pro systémové časové pásmo. 
+  - Případně zadejte UTC nebo časové pásmo ve formátu Region/Oblast ([seznam](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)).
+- **Typ vstupu**: Automatické doplňování textu (string)
+
+#### 🕒 24hodinový Formát
+- **Pole**: `Použít 24hodinový formát`
+- **Popis**: Přepínání mezi 24hodinovým a 12hodinovým formátem času.
+- **Typ vstupu**: Zaškrtávací políčko (boolean)
+
+### 📍 Nastavení polohy
+
+#### 🌐 Poloha
+- **Pole**: `Poloha`
+- **Popis**: Nastavte výchozí geografickou polohu pro výpočty solárních událostí. Může to být pevná poloha nebo proměnná prostředí.
+- **Typ vstupu**: Typed Input (string)
+
+### 📤 Nastavení výstupu
+
+#### 📬 Výstup zpráv odpovědi příkazu
+- **Pole**: `Výstup zpráv odpovědi příkazu`
+- **Popis**: Zvolte, jak mají být odesílány odpovědi na příkazy. Možnosti zahrnují:
+  - 1 výstup: Všechny zprávy na výstup 1 (plány + odpovědi na příkazy)
+  - 2 výstupy: Odpovědi na příkazy na výstup 1, Zprávy plánu na výstup 2
+  - Rozvětvení (Fan out): Oddělené výstupy pro zprávy příkazů a každé téma
+- **Typ vstupu**: Rozbalovací seznam (string)
+
+#### 📝 Výstupní vlastnost
+- **Pole**: `Výstupní pole`
+- **Popis**: Určete vlastnost v objektu zprávy, kde bude uložen výstup.
+  - např. pokud je 'Výstupní pole' nastaveno na **data.value**, pak `msg.data.value` bude obsahovat hodnotu *payload*
+  - `msg.topic` bude obsahovat název tématu. To zjednodušuje oddělení toho, který plán byl spuštěn
+  - Další vlastnosti jsou také přidány do objektu msg. Zkontrolujte ladicí výstup (použijte zobrazit celou zprávu)
+
+- **Typ vstupu**: Typed Input (string)
+
+### 📊 Nastavení stavu
+
+#### 📅 Odeslat stav plánů
+- **Pole**: `Odeslat stav plánů`
+- **Popis**: Nakonfigurujte, jak často se odesílá stav plánů a zda odesílat aktivní nebo neaktivní stavy.
+  - Toto je seskupeno podle tématu, takže pokud jsou dva plány `aktivní` (v rozsahu času startu a konce) pro stejné téma, bude odeslána pouze jedna zpráva s datasetem `true`. 
+  - Stejně tak, pokud je jeden plán pro téma `neaktivní` a druhý je `aktivní`, bude odeslána pouze jedna zpráva s datasetem `true`. 
+  - Pokud jsou oba plány `neaktivní`, bude odeslána pouze jedna zpráva s datasetem `false`.
+- **Typ vstupu**: Číslo (Interval), Zaškrtávací políčko (Stav Aktivní/Neaktivní) (number, boolean)
+
+### 💾 Nastavení úložiště
+
+#### 🗄️ Název úložiště
+- **Pole**: `Název úložiště`
+- **Popis**: Vyberte metodu ukládání pro uchování plánů. Možnosti zahrnují:
+  - Žádné: Neukládat plány. Plány budou ztraceny při opětovném nasazení uzlu
+  - Lokální souborový systém: Uložit plány do lokálního souborového systému. Plány se ukládají do adresáře s názvem `schedulerdata` ve vaší složce node-red
+  - Úložiště kontextu uzlu: Uložit plány do kontextu uzlu. Tato úložiště se automaticky načtou z vašeho konfiguračního souboru node-red. Viz dokumentace [Kontexty Node-RED](https://nodered.org/docs/user-guide/context) pro více informací.
+- **Typ vstupu**: Rozbalovací seznam (string)
+
+### 📨 Témata a datasety (Payloads)
+
+#### 🗂️ Témata
+- **Pole**: `Témata`
+- **Popis**: Definujte témata pro plánovač. Témata pomáhají kategorizovat a spravovat plány.
+  - Tato témata lze použít v poli `Téma` plánů a lze je vybrat v uživatelském rozhraní Node-Red Dashboard 2.0. 
+  - V režimu Fan Out budou zprávy plánu odesílány na výstup odpovídající tématu.
+- **Typ vstupu**: Upravitelný seznam (string)
+
+#### 📦 Vlastní datasety (Payloads)
+- **Pole**: `Vlastní datasety`
+- **Popis**: Definujte vlastní datasety, které se odešlou při spuštění plánu. 
+  - Datasety mohou být různých typů včetně řetězce, čísla, booleanu a JSON.
+  - Zde definované datasety lze vybrat v uživatelském rozhraní Dashboard.
+  - Změna hodnoty datasetu zde automaticky aktualizuje hodnoty datasetu všech plánů používajících tento dataset 
+- **Typ vstupu**: Upravitelný seznam s Typed Input (string, number, boolean, JSON)
+
+### ⚙️ Pokročilá nastavení
+
+#### 🕰️ Použít nový výběr času
+- **Pole**: `Použít nový výběr času`
+- **Popis**: Povolit nebo zakázat nové rozhraní pro výběr času.
+- **Typ vstupu**: Zaškrtávací políčko (boolean)
+
+## 🔧 Vstupy (Pokročilé použití)
+
+#### Téma
+Většinou příkazů lze zadat v tématu s názvem plánu v datasetu (kde je to vhodné). Podporovaná témata příkazů...
+
+- trigger
+- status
+- export
+- remove
+- pause
+- stop
+- start
+
+Zahrnuje to témata příkazů `-all`, `-all-dynamic`, `-all-static`, `-topic`, `-active`,  `-active-dynamic`,  `-active-static`, `-inactive`, `-inactive-dynamic` a `-inactive-static` (např. export-all, stop-all-dynamic, start-all-static, remove-inactive-dynamic). Viz [příkazy](#ui-scheduler-commands-info) níže pro podrobnosti.
+
+#### 📦 Dataset (Payload)
+Je možné dynamicky přidávat, odstraňovat a ovládat plány vložením datasetu do uzlu. Formát objektu datasetu (nebo pole objektů) závisí na operaci. Viz níže pro podrobnosti. Můžete také exportovat plány z uživatelského rozhraní Dashboard v editačním okně a vložit výsledný JSON.
+
+#### ➕ Přidání jednoho (nebo více) plánů
+Příklad...
+```json
+payload: {
+  "command": "add",
+  "schedule": [
+    {
+      "name": "Schedule",
+      "topic": "Topic 1",
+      "enabled": true,
+      "scheduleType": "time",
+      "period": "daily",
+      "time": "00:00",
+      "endTime": null,
+      "days": [
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday"
+      ],
+      "payloadType": true,
+      "payloadValue": true
+    },
+    {
+      "name": "Schedule 2",
+      "topic": "Topic 1",
+      "enabled": true,
+      "scheduleType": "solar",
+      "timespan": "time",
+      "solarEvent": "sunrise",
+      "offset": 5,
+      "solarEventStart": false,
+      "solarEventTimespanTime": "21:00",
+      "payloadType": "true_false",
+      "payloadValue": true,
+      "endPayloadValue": false
+    },
+    {
+      "name": "Schedule 3",
+      "topic": "Topic 1",
+      "enabled": true,
+      "scheduleType": "time",
+      "period": "minutes",
+      "duration": 1,
+      "timespan": "duration",
+      "minutesInterval": 7,
+      "payloadType": "true_false",
+      "payloadValue": true,
+      "endPayloadValue": false
+    }
+  ]
+}
+```
+
+### 📊 Získání stavu plánu nebo odstranění / zastavení / pozastavení / spuštění plánu
+
+#### Metoda Téma
+```json
+msg.topic = "command"; // command name - *see details below*,
+msg.payload = "name"; //  name of the schedule
+```
+
+#### Metoda Dataset (Payload)
+```json
+payload: {
+  "command": "*viz podrobnosti níže*",
+  "name": "* jméno plánu",
+}
+```
+
+#### Podrobnosti
+- command: (string|povinné) Operace k provedení - může být jedna z následujících...
+  - "trigger"
+  - "status"
+  - "export"
+  - "remove"
+  - "stop"
+  - "pause"
+  - "start"
+- name: (string|volitelné) Jméno plánu, který má být ovlivněn (není vyžadováno při použití filtrů -all, -active nebo -inactive)
+
+#### 📝 Poznámky
+- `trigger` spustí plán pojmenovaný v `msg.payload`
+- `status` vrátí objekt s konfigurací a stavem pojmenovaného plánu
+- `export` vrátí objekt s konfigurací pojmenovaného plánu
+- `remove` zastaví a odstraní plán. Tato možnost nemá žádný výstup.
+- `stop` zastaví plán určený jménem `name` a resetuje jeho interní čítač. Tato možnost nemá žádný výstup.
+- `pause` zastaví plán určený jménem `name`, ale neresetuje jeho interní čítač. Tato možnost nemá žádný výstup.
+- `start` (znovu) spustí všechny plány. Jakýkoli plán, který dosáhl svého limitu, začne od začátku. Pozastavené plány budou obnoveny. Tato možnost nemá žádný výstup.
+- FILTR: přidání `-all` k jakémukoli z těchto příkazů bude fungovat na všech plánech. např. `status-all` vrátí stav všech plánů
+- FILTR: přidání `-all-dynamic` k jakémukoli z těchto příkazů ovlivní pouze dynamické plány např. `remove-all-dynamic` odstraní všechny dynamické plány
+- FILTR: přidání `-all-static` k jakémukoli z těchto příkazů ovlivní pouze statické plány např. `stop-all-static`
+- FILTR: přidání `-topic` k jakémukoli z těchto příkazů ovlivní pouze plány, jejichž téma odpovídá tématu zadanému v datasetu např. `stop-topic`
+- FILTR: přidání `-active` k příkazům status, export a remove bude fungovat na všech aktivních plánech. např. `status-active`
+- FILTR: přidání `-active-static` k příkazům status, export a remove bude fungovat na všech statických plánech, které jsou aktivní. např. `status-active-static`
+- FILTR: přidání `-active-dynamic` k příkazům status, export a remove bude fungovat na všech dynamických plánech, které jsou aktivní. např. `status-active-dynamic`
+- FILTR: přidání `-inactive` k příkazům status, export a remove bude fungovat na všech neaktivních plánech. např. `status-inactive`
+- FILTR: přidání `-inactive-static` k příkazům status, export a remove bude fungovat na všech statických plánech, které jsou neaktivní. např. `status-inactive-static`
+- FILTR: přidání `-inactive-dynamic` k příkazům status, export a remove bude fungovat na všech dynamických plánech, které jsou neaktivní. např. `status-inactive-dynamic`
+
+#### 📖 Příklady
+- Použití jednoduchého příkazu tématu k ručnímu spuštění plánu s názvem "schedule1"
+  ```json
+  msg: {
+    "topic": "trigger",
+    "payload": "schedule1"
+  }
+  ```
+- Použití jednoduchého příkazu tématu s tématem v datasetu ke spuštění všech plánů se zadaným tématem
+  ```json
+  msg: {
+    "topic": "start-topic",
+    "payload": { "topic": "Topic 1" }
+  }
+  ```
+- Použití jednoduchého příkazu tématu k exportu všech dynamicky přidaných plánů...
+  ```json
+  msg: {
+    "topic": "export-all-dynamic"
+  }
+  ```
+- Použití jednoduchého příkazu tématu k odstranění plánu s názvem "schedule1"
+  ```json
+  msg: {
+    "topic": "remove",
+    "payload": "schedule1"
+  }
+  ```
+- Použití datasetu cmd k pozastavení všech plánů...
+  ```json
+  payload: {
+    "command": "pause-all"
+  }
+  ```
+- Použití jednoduchého příkazu tématu k odstranění všech dynamických plánů, které skončily
+  ```json
+  msg: {
+    "topic": "remove-inactive-dynamic"
+  }
+  ```
+
+### 🔍 Describe (Popis)
+
+#### Příklad: dataset cmd k popisu cron výrazu
+```json
+{
+  "command": "describe",
+  "expressionType": "cron",
+  "expression": "0 */5 * * * MON *",
+  "timeZone": "Europe/London"
+}
+```
+
+#### Příklad: dataset cmd k získání všech časů solárních událostí + solárního stavu v tomto čase
+```json
+{
+  "command": "describe",
+  "expressionType": "solar",
+  "location": "54.9992500,-1.4170300",
+  "solarType": "all",
+  "timeZone": "Europe/London"
+}
+```
+
+#### Příklad: dataset cmd k získání 4 časů solárních událostí + solární pro konkrétní bod v čase
+```json
+{
+  "command": "describe",
+  "expressionType": "solar",
+  "time": "2020-03-22 18:40",
+  "location": "54.9992500,-1.4170300",
+  "solarType": "selected",
+  "solarEvents": "civilDawn,sunrise,sunset,civilDusk",
+  "timeZone": "Europe/London"
+}
+```
+
+#### Podrobnosti
+Vrátí objekt v datasetu obsahující lidsky čitelné informace pro daný výraz.
+
+- command: (string|povinné) Operace k provedení
+- expression: (string|povinné) Výraz pro popis
+- timeZone: (string|volitelné) Časové pásmo k použití. Nechte prázdné pro systémové časové pásmo. Případně zadejte UTC nebo časové pásmo ve formátu Region/Oblast ([seznam](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones))
+
+## Další Info
+
+### ⏰ CronExpression
+CRON výraz, datum, čárkami oddělený seznam dat nebo pole dat.
+
+##### 📅 Datum nebo Format Sekvence Dat
+Když si přejete použít pevné datum nebo sekvenci dat, výraz může být řetězcovým datem, čárkami odděleným seznamem dat, polem dat (Pole může obsahovat mix řetězců, objektů data a časových razítek). Při zadávání řetězcového data můžete použít časové pásmo např. "2020-01-01 00:00 GMT+2". Můžete dokonce mixovat časová pásma např. "2020-01-01 00:00 GMT+2, 2020-01-01 00:00 GMT-7".
+
+##### ⏲️ Formát CRON
+```
+* * * * * * *    Pole               Povolené hodnoty  Speciální symboly
+| | | | | | |    -----------------  ---------------   ---------------
+`-|-|-|-|-|-|->  Sekunda (volit.)   0-59              * / , -
+  `-|-|-|-|-|->  Minuta             0-59              * / , -
+    `-|-|-|-|->  Hodina             0-23              * / , -
+      `-|-|-|->  Den v měsíci       1-31              * / , - ? L W
+        `-|-|->  Měsíc              1-12 or JAN-DEC   * / , -
+          `-|->  Den v týdnu        0-7 or SUN-SAT    * / , - ? L #
+            `->  Rok (volit.)       1970-2099         * / , -
+```
+
+##### 📝 Poznámky
+- `*` Hvězdičky označují, že cron výraz odpovídá všem hodnotám pole. Například "*" v poli minuty znamená každou minutu.
+- `?` Otazníky se používají k určení 'žádné konkrétní hodnoty' a jsou povoleny pro pole den v měsíci a den v týdnu. Používají se místo hvězdičky (*) k ponechání prázdného pole den v měsíci nebo den v týdnu.
+- `-` Pomlčky se používají k definování rozsahů. Například "10-12" v poli hodiny znamená hodiny 10, 11 a 12.
+- `,` Čárky se používají k oddělení položek seznamu. Například "MON,WED,FRI" v poli den v týdnu znamená dny Pondělí, Středa a Pátek.
+- `/` Lomítka se používají k indikaci přírůstků. Například "0/15" v poli sekundy znamená sekundy 0, 15, 30 a 45. Navíc "1/3" v poli den v měsíci znamená každý 3. den počínaje prvním dnem v měsíci.
+- `L` Zkratka pro "last" (poslední) a je povolena pro pole den v měsíci a den v týdnu. Znak "L" má jiný význam v každém z těchto dvou polí. Například "L" v poli den v měsíci znamená poslední den v měsíci. Pokud se použije v poli den v týdnu, znamená 7 nebo SAT (Sobota). Pokud se však použije v poli den v týdnu po jiné hodnotě, znamená poslední xxx den v měsíci. Například "6L" v poli den v týdnu znamená poslední Pátek v měsíci.
+- `W` Zkratka pro "weekday" (pracovní den) a je povolena pro pole den v měsíci. Znak "W" se používá k určení pracovního dne nejbližšího k danému dni. Například "15W" v poli den v měsíci znamená nejbližší pracovní den k 15. dni v měsíci. Proto, pokud je 15. Sobota, úloha běží v Pátek 14. Znaky "L" a "W" lze kombinovat v poli den v měsíci. Například "LW" znamená poslední pracovní den v měsíci.
+- `#` Znaky hash určují konstrukce. Například "6#3" v poli den v týdnu znamená třetí Pátek v měsíci.
+
+##### 📖 Příklady
+- `* * * * * *` Každou sekundu
+- `0 * * * * *` Každou minutu
+- `0 */10 * * * *` Každých 10 minut
+- `0 */20 1 * * *` Každých 20 minut, mezi 01:00 AM a 01:59 AM
+- `0 15,30,45 * * * *` V 15, 30 a 45 minut po hodině
+- `0 0 12 * * *` Každý den v poledne - 12pm
+- `0 0 2 29 FEB * 2020/4` V 02:00 AM, dne 29. Února (přestupné roky)
+- `0 0 7 * * MON#1 *` V 07:00 AM, první Pondělí v měsíci
+- `0 0 12 * JAN,FEB,MAR,APR *` Každý den v poledne v Lednu, Únoru, Březnu a Dubnu
+- `* * 1W * *` Každou minutu, první pracovní den v měsíci
+- `* * * * Tue#3` Každou minutu, třetí Úterý v měsíci
+- `0 12 * * MONL` Ve 12:00 PM, poslední Pondělí v měsíci
+
+Viz [zde](https://github.com/jaclarke/cronosjs) pro více příkladů a informací.
+
+#### 🌅 Solární Události
+| ID Události | Událost | Informace |
+|----------|-------|-------------|
+| nightEnd | konec noci / astronomický úsvit | noc končí, astronomický soumrak začíná (-18°) |
+| nauticalDawn | nautický úsvit | astronomický soumrak končí, nautický úsvit začíná (-12°) |
+| civilDawn | občanský úsvit / zlatá hodina | nautický soumrak končí, občanský úsvit a zlatá hodina začíná (-6°) |
+| sunrise | východ slunce | horní okraj slunce se objeví na obzoru (-0.833°) |
+| sunriseEnd | konec východu slunce | spodní okraj slunce se dotkne obzoru (-0.3°) |
+| morningGoldenHourEnd | konec ranní zlaté hodiny | když je slunce 6 stupňů nad obzorem (6°) |
+| solarNoon | sluneční poledne | slunce je v nejvyšší poloze |
+| eveningGoldenHourStart | začátek večerní zlaté hodiny | když je slunce 6 stupňů nad obzorem (6°) |
+| sunsetStart | začátek západu slunce | spodní okraj slunce se dotkne obzoru (-0.3°) |
+| sunset | západ slunce | občanský soumrak začíná, slunce mizí pod obzorem (-0.833°) |
+| civilDusk | občanský soumrak / konec zlaté hodiny | občanský soumrak a zlatá hodina končí, nautický soumrak začíná (-6°) |
+| nauticalDusk | nautický soumrak | nautický soumrak končí, astronomický soumrak začíná (-12°) |
+| nightStart | astronomický soumrak / začátek noci | astronomický soumrak končí, noc začíná (-18°) |
+| nadir | sluneční půlnoc | když je slunce nejblíže nadiru a noc je ve stejné vzdálenosti od soumraku a úsvitu |
+
+#### 📝 Obecné Poznámky
+- Přidání plánu se stejným názvem jako existující plán nahradí ten existující
+- Když uzel ui-scheduler odešle msg v odpovědi na příkaz, `msg.commandResponse` bude `true` pro indikaci, že zpráva je v odpovědi na příkaz a ne naplánovanou událostí
+- Když uzel ui-scheduler odešle msg pro cron/solární událost, `msg.scheduledEvent` bude `true` pro indikaci, že zpráva je způsobena naplánovanou událostí a ne kontrolní odpovědí
+</script>

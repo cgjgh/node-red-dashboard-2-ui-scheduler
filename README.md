@@ -32,6 +32,9 @@ This node is still in beta and is not yet ready for production use. Any contribu
   - 🇮🇹 Italiano
   - 🇳🇱 Nederlands
   - 🇪🇸 Español
+  - 🇵🇱 Polski
+  - 🇨🇿 Čeština
+  - 🇨🇳 简体中文
 
 ![Overview](https://github.com/cgjgh/node-red-dashboard-2-ui-scheduler/blob/40658aef518f54a6068e5eb9bfc79029e86b4c16/assets/overview.png?raw=true)
 
@@ -62,7 +65,7 @@ Finding this useful? By supporting my Node-RED Dashboard development, you’ll h
 - Click the plus sign at the top right corner of the node to create a new schedule.
 
 ## 🌐 Setting Language
- - Edit <code>~/.node-red/settings.js</code> and add/uncomment the following line: <code>lang: 'en'</code> Available languages codes are: <code>en</code>, <code>de</code>, <code>fr</code>, <code>it</code>, <code>nl</code>, <code>es</code>
+ - Edit <code>~/.node-red/settings.js</code> and add/uncomment the following line: <code>lang: 'en'</code> Available languages codes are: <code>en</code>, <code>de</code>, <code>fr</code>, <code>it</code>, <code>nl</code>, <code>es</code>, <code>pl</code>, <code>cs</code>, <code>zh-CN</code>
  - Open the node's configuration dialog and set the desired language for scheduler in the Dashboard 2.0 UI
 
 ## 🙏 Acknowledgements

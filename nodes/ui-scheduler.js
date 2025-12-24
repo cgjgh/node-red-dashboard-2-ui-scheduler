@@ -25,7 +25,7 @@ SunCalc.addTime(-18, 'nightEnd', 'nightStart')
 SunCalc.addTime(-6, 'civilDawn', 'civilDusk')
 SunCalc.addTime(6, 'morningGoldenHourEnd', 'eveningGoldenHourStart')
 
-const availableLocales = ['en', 'de', 'fr', 'it', 'nl', 'es']
+const availableLocales = ['en', 'de', 'fr', 'it', 'nl', 'es', 'pl', 'cs', 'zh-CN']
 
 /**
  * Sets the locale for the given configuration object.
