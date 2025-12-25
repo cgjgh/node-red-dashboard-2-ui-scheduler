@@ -4,24 +4,27 @@ layout: home
 
 hero:
   name: "Node-RED Dashboard 2 UI Scheduler"
-  text: "Official documentation for Node-RED Dashboard 2 UI Scheduler"
-  tagline: Your comprehensive guide to managing and scheduling UI elements.
+  text: "Official Documentation"
+  tagline: A powerful scheduler widget for Node-RED Dashboard 2.0.
+  image:
+    src: /assets/overview.png
+    alt: Scheduler Overview
   actions:
     - theme: brand
       text: Get Started
-      link: /Installation
+      link: /getting-started
     - theme: alt
-      text: Features
-      link: /Features
-    - theme: alt
-      text: Usage Guide
-      link: /Usage
+      text: View Configuration
+      link: /configuration
 
 features:
-  - title: Robust Scheduling
-    details: Easily define and manage schedules for your Node-RED dashboard components.
-  - title: Seamless Integration
-    details: Integrates smoothly with existing workflows to enhance UI management.
-  - title: Advanced Configuration
-    details: Offers extensive customization options to cater to varied application needs.
+  - title: 📅 Flexible Scheduling
+    details: Create events, timespans, and complex cron schedules directly from the UI.
+    link: /schedules
+  - title: ☀️ Solar Events
+    details: Automate based on sunrise, sunset, and other solar phases with offsets.
+    link: /schedules#solar-events
+  - title: 💾 Persistent Storage
+    details: Ensure your schedules survive restarts with robust context store support.
+    link: /persistence
 ---

@@ -16,17 +16,30 @@ export default defineConfig({
 
     sidebar: [
       {
-        text: 'Documentation',
+        text: 'Guide',
         items: [
-          { text: 'Home', link: '/Home' },
-          { text: 'Features', link: '/Features' },
-          { text: 'Installation', link: '/Installation' },
-          { text: 'Usage', link: '/Usage' },
-          { text: 'Configuration', link: '/Configuration' },
+          { text: 'Getting Started', link: '/getting-started' },
+          { text: 'Configuration', link: '/configuration' }
+        ]
+      },
+      {
+        text: 'Scheduling',
+        items: [
+          { text: 'Schedule Types', link: '/schedules' }
+        ]
+      },
+      {
+        text: 'Advanced',
+        items: [
+          { text: 'Outputs & Dynamic Input', link: '/outputs' },
+          { text: 'Persistence', link: '/persistence' },
+          { text: 'Localization', link: '/localization' }
+        ]
+      },
+      {
+        text: 'Reference',
+        items: [
           { text: 'Development', link: '/Development' },
-          { text: 'API Examples', link: '/api-examples' },
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Acknowledgements', link: '/Acknowledgements' },
           { text: 'License', link: '/License' }
         ]
       }
