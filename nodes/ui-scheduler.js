@@ -1,4 +1,4 @@
-const version = '3.3.4'
+const version = '3.3.5'
 const packageName = '@cgjgh/node-red-dashboard-2-ui-scheduler'
 
 /* eslint-disable no-unused-vars */
