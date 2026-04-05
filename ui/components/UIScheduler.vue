@@ -2126,15 +2126,15 @@ export default {
                     newSchedule.payloadValue = true
                     newSchedule.endPayloadValue = false
                 } else {
-                    newSchedule.payloadValue = this.customPayloadStart
-                    newSchedule.endPayloadValue = this.customPayloadEnd
+                    newSchedule.payloadValue = (this.customPayloadStart?.id) ? this.customPayloadStart.id : this.customPayloadStart
+                    newSchedule.endPayloadValue = (this.customPayloadEnd?.id) ? this.customPayloadEnd.id : this.customPayloadEnd
                 }
             } else {
                 newSchedule.payloadType = this.payloadType
                 if (this.payloadType !== 'custom' && this.payloadType !== 'true_false') {
                     newSchedule.payloadValue = this.payloadType
                 } else if (this.payloadType === 'custom') {
-                    newSchedule.payloadValue = this.customPayloadStart
+                    newSchedule.payloadValue = (this.customPayloadStart?.id) ? this.customPayloadStart.id : this.customPayloadStart
                 }
             }
 
